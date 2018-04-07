@@ -5,5 +5,5 @@ Build docker images for Drupal 6, 7, 8 with support for drush
 
 * extra support for drush
 * extra support for older drupal-6 (version 6.38)
-* extra support for apche with drupal in a subdir
+* extra support for apache with drupal in a subdir
 
