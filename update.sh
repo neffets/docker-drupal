@@ -19,7 +19,7 @@ declare -A phpVersions=(
 )
 
 curl -fsSL 'https://www.drupal.org/node/3060/release' -o release
-#trap 'rm -f release' EXIT
+trap 'rm -f release' EXIT
 
 travisEnv=
 for version in "${versions[@]}"; do
