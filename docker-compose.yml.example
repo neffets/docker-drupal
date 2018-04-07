@@ -1,0 +1,34 @@
+version: "3.2"
+
+services:
+  bhspstg:
+    #image: drupal:6-apache
+    image: neffets/drupal:6.38
+    environment:
+      # use with docker dockercloud/haproxy
+      #FORCE_SSL: 1
+      VIRTUAL_HOST: https://www.example.com/my/subdir*
+      SERVICE_PORTS: 80
+      DRUPAL_SUBDIR: "/my/subdir"
+      APACHE_UID: 20000
+      APACHE_GID: 20000
+    volumes:
+      - /my/dir/sites:/var/www/html/sites
+      - ./healthcheck:/usr/local/bin/healthcheck
+    #healthcheck:
+    #  test: ["CMD", "/bin/bash", "-c", "/usr/local/bin/healthcheck"]
+    #  interval: 30s
+    #  timeout: 10s
+    #  retries: 5
+    networks:
+      - drupal_net
+    deploy:
+      mode: global
+      #replicas: 1
+
+networks:
+  #net:
+  #  driver: overlay
+  drupal_net:
+    external: true
+

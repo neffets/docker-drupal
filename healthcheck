@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+SERVER_NAME=${VIRTUAL_HOST/,*/}
+SERVER_NAME=${VIRTUAL_HOST#https://}
+
+#wget -nv --header "Host: ${SERVER_NAME}" --header "X-SSL: yes" --output-document=/dev/null http://localhost%{DRUPAL_SUBDIR}
+curl -s --header "Host: ${SERVER_NAME}" --header "X-SSL: yes" --output /dev/null http://localhost%{DRUPAL_SUBDIR}
+
+if [ $? -eq 0 ]; then
+	echo "OK"
+	exit 0
+else
+	echo "ERROR" 2>&1
+    echo "VIRTUAL_HOST: $VIRTUAL_HOST"
+    echo "SERVER_NAME: $SERVER_NAME"
+    echo "DRUPAL_SUBDIR: $DRUPAL_SUBDIR"
+	exit 1
+fi
+
