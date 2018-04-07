@@ -1,4 +1,4 @@
-# from https://www.drupal.org/docs/8/system-requirements/drupal-8-php-requirements
+# old version drupal 6 is deprecated, but thousands of sites still run on it, so try to keep ongoing security, @see d6lts
 FROM php:%%PHP_VERSION%%-%%VARIANT%%
 
 # install the PHP extensions we need
