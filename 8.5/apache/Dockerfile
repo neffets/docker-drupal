@@ -12,6 +12,7 @@ RUN set -ex; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
+		libgmp-dev \
 		libjpeg-dev \
 		libpng-dev \
 		libpq-dev \
@@ -19,7 +20,9 @@ RUN set -ex; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install -j "$(nproc)" \
+		bcmath \
 		gd \
+		gmp \
 		opcache \
 		pdo_mysql \
 		pdo_pgsql \
