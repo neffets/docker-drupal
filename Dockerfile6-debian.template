@@ -71,8 +71,10 @@ RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.ta
 	&& tar -xz --strip-components=1 -f drupal.tar.gz \
 	&& rm drupal.tar.gz \
 	&& chown -R www-data:www-data sites modules themes ; \
-    git clone https://git.drupal.org/project/d6lts.git \
-    && patch -p1 < d6lts/common/core/SA-CORE-2018-001.patch \
-    && patch -p1 < d6lts/common/core/SA-CORE-2018-002.patch
+	git clone https://git.drupal.org/project/d6lts.git \
+	; patch -p1 < d6lts/common/core/SA-CORE-2018-001.patch \
+	; patch -p1 < d6lts/common/core/SA-CORE-2018-002.patch \
+	; patch -p1 < d6lts/common/core/SA-CORE-2018-002-bugfix1.patch \
+	; echo "*** Drupal CORE patched."
 
 # vim:set ft=dockerfile:
