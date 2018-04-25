@@ -74,7 +74,7 @@ RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.ta
 	git clone https://git.drupal.org/project/d6lts.git \
 	; patch -p1 < d6lts/common/core/SA-CORE-2018-001.patch \
 	; patch -p1 < d6lts/common/core/SA-CORE-2018-002.patch \
-	; patch -p1 < d6lts/common/core/SA-CORE-2018-002-bugfix1.patch \
+	; patch -p1 < d6lts/common/core/SA-CORE-2018-004.patch \
 	; echo "*** Drupal CORE patched."
 
 # vim:set ft=dockerfile:
