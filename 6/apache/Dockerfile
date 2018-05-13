@@ -24,7 +24,7 @@ RUN set -ex; \
 		opcache \
 		pdo_mysql \
 		pdo_pgsql \
-        mysqli \
+		mysqli \
 		zip \
 	; \
 	\
@@ -58,6 +58,7 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini ; \
     { \
         echo 'mbstring.http_input="pass"'; \
+        echo 'mbstring.http_output="pass"'; \
     } > /usr/local/etc/php/conf.d/php-overwrite.ini
 
 WORKDIR /var/www/html
