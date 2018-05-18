@@ -40,7 +40,7 @@ RUN set -ex; \
 		| xargs -rt apt-mark manual; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-    apt-get install -y --no-install-recommends curl tidy mysql-client vim git; \
+	apt-get install -y --no-install-recommends curl tidy mysql-client vim git msmtp msmtp-mta; \
 	rm -rf /var/lib/apt/lists/*
 
 # ADD Variables DRUPAL_SUBDIR, APACHE_UID, APACHE_GID
@@ -56,9 +56,19 @@ RUN { \
 		echo 'opcache.fast_shutdown=1'; \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini ; \
-    { \
-        echo 'mbstring.http_input="pass"'; \
-    } > /usr/local/etc/php/conf.d/php-overwrite.ini
+	{ \
+		echo 'mbstring.http_input="pass"'; \
+		echo 'mbstring.http_output="pass"'; \
+		echo 'sendmail_path="/usr/bin/msmtp --file /etc/msmtprc -t -i"'; \
+		echo 'display_errors="stdout"'; \
+	} > /usr/local/etc/php/conf.d/php-overwrite.ini; \
+	{ \
+		echo 'host example.com'; \
+		echo 'from server@localhost'; \
+		echo 'maildomain example.com'; \
+		echo 'syslog off'; \
+	} > /etc/msmtprc
+
 
 WORKDIR /var/www/html
 
