@@ -24,7 +24,7 @@ RUN set -ex; \
 		opcache \
 		pdo_mysql \
 		pdo_pgsql \
-        mysqli \
+		mysqli \
 		zip \
 	; \
 	\
@@ -68,7 +68,6 @@ RUN { \
 		echo 'maildomain example.com'; \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
-
 
 WORKDIR /var/www/html
 
