@@ -16,9 +16,10 @@ declare -A phpVersions=(
 	[8.3]='7.1'
 	[8.4]='7.1'
 	[8.5]='7.2'
+	[8.6]='7.2'
 )
 
-curl -fsSL 'https://www.drupal.org/node/3060/release' -o release
+curl -o release -fsSL 'https://www.drupal.org/node/3060/release' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: de-DE,eo;q=0.8,de;q=0.6,en-US;q=0.4,en;q=0.2'
 trap 'rm -f release' EXIT
 
 travisEnv=
