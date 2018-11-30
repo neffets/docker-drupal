@@ -43,7 +43,6 @@ RUN set -ex; \
 	apt-get install -y --no-install-recommends curl tidy mysql-client vim git msmtp msmtp-mta; \
 	rm -rf /var/lib/apt/lists/*
 
-RUN pwd; ls -al ./
 # ADD Variables DRUPAL_SUBDIR, APACHE_UID, APACHE_GID
 COPY ./docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
 
