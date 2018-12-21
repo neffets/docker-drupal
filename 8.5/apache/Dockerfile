@@ -16,6 +16,9 @@ RUN set -ex; \
 		libjpeg-dev \
 		libpng-dev \
 		libpq-dev \
+		default-libmysqlclient-dev \
+		libfontconfig1 \
+		libxext6 \
 	; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
@@ -26,6 +29,7 @@ RUN set -ex; \
 		opcache \
 		pdo_mysql \
 		pdo_pgsql \
+		mysqli \
 		zip \
 	; \
 	\
@@ -41,7 +45,7 @@ RUN set -ex; \
 		| xargs -rt apt-mark manual; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	apt-get install -y --no-install-recommends curl tidy mysql-client vim git msmtp msmtp-mta; \
+	apt-get install -y --no-install-recommends curl tidy mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6; \
 	rm -rf /var/lib/apt/lists/*
 
 # set recommended PHP.ini settings
@@ -57,8 +61,12 @@ RUN { \
 	{ \
 		echo 'mbstring.http_input="pass"'; \
 		echo 'mbstring.http_output="pass"'; \
+		echo 'log_errors = On'; \
+		echo 'error_log = /dev/stdout'; \
 		echo 'sendmail_path="/usr/bin/msmtp --file /etc/msmtprc -t -i"'; \
 		echo 'display_errors="stdout"'; \
+		echo 'upload_max_filesize = "3M"'; \
+		echo 'post_max_size = "20M"'; \
 	} > /usr/local/etc/php/conf.d/php-overwrite.ini; \
 	{ \
 		echo 'host example.com'; \
@@ -77,6 +85,8 @@ RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.ta
 	&& echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
 	&& tar -xz --strip-components=1 -f drupal.tar.gz \
 	&& rm drupal.tar.gz \
+    && (curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer) \
+    && (composer --no-dev install; composer require drush/drush) \
 	&& chown -R www-data:www-data sites modules themes
 
 # vim:set ft=dockerfile:

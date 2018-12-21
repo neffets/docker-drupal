@@ -12,15 +12,20 @@ RUN set -ex; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
+		libgmp-dev \
 		libjpeg-dev \
 		libpng-dev \
 		libpq-dev \
-        libmysqlclient-dev \
+		libmysqlclient-dev \
+		libfontconfig1 \
+		libxext6 \
 	; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install -j "$(nproc)" \
+		bcmath \
 		gd \
+		gmp \
 		opcache \
 		pdo_mysql \
 		pdo_pgsql \
@@ -40,7 +45,7 @@ RUN set -ex; \
 		| xargs -rt apt-mark manual; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	apt-get install -y --no-install-recommends curl tidy mysql-client vim git msmtp msmtp-mta; \
+	apt-get install -y --no-install-recommends curl tidy mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6; \
 	rm -rf /var/lib/apt/lists/*
 
 # ADD Variables DRUPAL_SUBDIR, APACHE_UID, APACHE_GID
@@ -59,8 +64,12 @@ RUN { \
 	{ \
 		echo 'mbstring.http_input="pass"'; \
 		echo 'mbstring.http_output="pass"'; \
+		echo 'log_errors = On'; \
+		echo 'error_log = /dev/stdout'; \
 		echo 'sendmail_path="/usr/bin/msmtp --file /etc/msmtprc -t -i"'; \
 		echo 'display_errors="stdout"'; \
+		echo 'upload_max_filesize = "3M"'; \
+		echo 'post_max_size = "20M"'; \
 	} > /usr/local/etc/php/conf.d/php-overwrite.ini; \
 	{ \
 		echo 'host example.com'; \
