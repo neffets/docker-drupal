@@ -80,13 +80,14 @@ WORKDIR /var/www/html
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION 7.64
 ENV DRUPAL_MD5 bbb3c4d8c2cba35c48380d34f122f750
+ENV DRUSH_VERSION 7.4.0
 
 RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
 	&& echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
 	&& tar -xz --strip-components=1 -f drupal.tar.gz \
 	&& rm drupal.tar.gz \
     && (curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer) \
-    && (composer --no-dev install; composer require drush/drush) \
+    && (composer --no-dev install; composer require drush/drush ${DRUSH_VERSION}) \
 	&& chown -R www-data:www-data sites modules themes
 
 # vim:set ft=dockerfile:
