@@ -10,6 +10,8 @@ RUN set -ex; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
 	\
+    echo "REPLACE deprecated \"jessie-updates\" with \"oldstable\" repository" ; \
+    perl -pi -e 's#jessie-updates#oldstable#' /etc/apt/sources.list ; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		libgmp-dev \
@@ -20,6 +22,7 @@ RUN set -ex; \
 		libfontconfig1 \
 		libxext6 \
 	; \
+    ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/local/include/. ; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install -j "$(nproc)" \
@@ -94,6 +97,7 @@ RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.ta
 	; patch -p1 < d6lts/common/core/SA-CORE-2018-001.patch \
 	; patch -p1 < d6lts/common/core/SA-CORE-2018-002.patch \
 	; patch -p1 < d6lts/common/core/SA-CORE-2018-004.patch \
+	; patch -p1 < d6lts/common/core/SA-CORE-2018-006.patch \
 	; echo "*** Drupal CORE patched."
 
 # vim:set ft=dockerfile:
