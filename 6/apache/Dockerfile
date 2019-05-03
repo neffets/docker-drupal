@@ -1,5 +1,5 @@
 # old version drupal 6 is deprecated, but thousands of sites still run on it, so try to keep ongoing security, @see d6lts
-FROM php:5.6-apache
+FROM neffets/php5:apache-5.6
 
 # install the PHP extensions we need
 RUN set -ex; \
@@ -10,8 +10,6 @@ RUN set -ex; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
 	\
-    echo "REPLACE deprecated \"jessie-updates\" with \"oldstable\" repository" ; \
-    perl -pi -e 's#jessie-updates#oldstable#' /etc/apt/sources.list ; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		libgmp-dev \
