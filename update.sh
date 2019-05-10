@@ -23,9 +23,9 @@ defaultDrushVersion='7.4.0'
 declare -A drushVersions=(
 	[6]='6.7.0'
 	[7]='7.4.0'
-	[8.5]='8.1.18'
-	[8.6]='8.1.18'
-	[8.7]='8.1.18'
+	[8.5]='8.2.3'
+	[8.6]='8.2.3'
+	[8.7]='9.6.2'
 )
 
 curl -o release -fsSL 'https://www.drupal.org/node/3060/release' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: de-DE,eo;q=0.8,de;q=0.6,en-US;q=0.4,en;q=0.2'
