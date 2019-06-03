@@ -94,8 +94,20 @@ RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.ta
 	git clone https://git.drupal.org/project/d6lts.git \
 	; patch -p1 < d6lts/common/core/SA-CORE-2018-001.patch \
 	; patch -p1 < d6lts/common/core/SA-CORE-2018-002.patch \
+	; patch -p1 < d6lts/common/core/SA-CORE-2018-002-bugfix1.patch \
 	; patch -p1 < d6lts/common/core/SA-CORE-2018-004.patch \
 	; patch -p1 < d6lts/common/core/SA-CORE-2018-006.patch \
+	; patch -p1 < d6lts/common/core/SA-CORE-2019-002.patch \
+	; patch -p1 < d6lts/common/core/SA-CORE-2019-006.patch \
 	; echo "*** Drupal CORE patched."
+#	&& patch -p1 -d sites/all/modules/filefield < d6lts/common/contrib/filefield/SA-CORE-2018-004.patch ; \
+#	&& patch -p1 -d sites/all/modules/lightbox2 < d6lts/common/contrib/lightbox2/SA-CONTRIB-2018-064.patch ; \
+#	&& patch -p1 -d sites/all/modules/password_policy < d6lts/common/contrib/password_policy/sa-contrib-2018-077.patch \
+#	&& patch -p1 -d sites/all/modules/print < d6lts/common/contrib/print/SA-CONTRIB-2018-063.patch ; \
+#	&& patch -p1 -d sites/all/modules/session_limit < d6lts/common/contrib/session_limit/SA-CONTRIB-2018-072.patch ; \
+#	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2014-054-6.x-2.x.patch ; \
+#	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2016-036-6.x-2.x.patch ; \
+#	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2017-022.patch ; \
+#	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2017-068-6.x-2.x.patch ; \
 
 # vim:set ft=dockerfile:
