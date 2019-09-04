@@ -17,7 +17,7 @@ declare -A phpVersions=(
 	[8.4]='7.1'
 	[8.5]='7.2'
 	[8.6]='7.2'
-	[8.7]='7.2'
+	[8.7]='7.3'
 )
 defaultDrushVersion='7.4.0'
 declare -A drushVersions=(

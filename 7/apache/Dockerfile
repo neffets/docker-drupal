@@ -45,7 +45,7 @@ RUN set -ex; \
 		| xargs -rt apt-mark manual; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	apt-get install -y --no-install-recommends curl tidy mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6; \
+	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6; \
 	rm -rf /var/lib/apt/lists/*
 
 # set recommended PHP.ini settings
