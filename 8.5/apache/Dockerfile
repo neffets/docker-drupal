@@ -16,6 +16,7 @@ RUN set -ex; \
 		libjpeg-dev \
 		libpng-dev \
 		libpq-dev \
+        libzip-dev \
 		default-libmysqlclient-dev \
 		libfontconfig1 \
 		libxext6 \
