@@ -18,17 +18,19 @@ declare -A phpVersions=(
 	[8.5]='7.2'
 	[8.6]='7.2'
 	[8.7]='7.3'
+	[8.8]='7.3'
 )
-defaultDrushVersion='7.4.0'
+defaultDrushVersion='10.1.0'
 declare -A drushVersions=(
 	[6]='6.7.0'
-	[7]='7.4.0'
-	[8.5]='8.2.3'
-	[8.6]='8.2.3'
-	[8.7]='9.6.2'
+	[7]='8.3.2'
+	[8.5]='9.7.1'
+	[8.6]='10.1.0'
+	[8.7]='10.1.0'
+	[8.8]='10.1.0'
 )
 
-curl -o release -fsSL 'https://www.drupal.org/node/3060/release' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: de-DE,eo;q=0.8,de;q=0.6,en-US;q=0.4,en;q=0.2'
+curl -o release -fsSL 'https://www.drupal.org/node/3060/release' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:70.0) Gecko/20191101 Firefox/70.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: de-DE,eo;q=0.8,de;q=0.6,en-US;q=0.4,en;q=0.2'
 trap 'rm -f release' EXIT
 
 travisEnv=
@@ -48,11 +50,11 @@ for version in "${versions[@]}"; do
 		grep -E '>drupal-'"$rcVersion"'\.[0-9a-z.-]+\.tar\.gz<' release \
 			| sed -r 's!.*<a[^>]+>drupal-([^<]+)\.tar\.gz</a>.*!\1!' \
 			| grep $rcGrepV -E -- '-rc|-beta|-alpha|-dev' \
-			| head -1
+			| head -1 || echo ''
 	  )"
 	  if [ -z "$fullVersion" ]; then
 		echo >&2 "error: cannot find release for $version"
-		exit 1
+		continue
 	  fi
 	  md5="$(grep -A6 -m1 '>drupal-'"$fullVersion"'.tar.gz<' release | grep -A1 -m1 '"md5 hash"' | tail -1 | awk '{ print $1 }')"
     fi
@@ -72,7 +74,7 @@ for version in "${versions[@]}"; do
 				-e 's/%%VERSION%%/'"$fullVersion"'/' \
 				-e 's/%%MD5%%/'"$md5"'/' \
 				-e 's/%%DRUSH_VERSION%%/'"${drushVersions[$version]:-$defaultDrushVersion}"'/' \
-			"./Dockerfile$oldVersion-$dist.template" > "$version/$variant/Dockerfile"
+			"./Dockerfile$oldVersion-$dist.template" > "$version/$variant/Dockerfile" || echo "Version $version failed"
 		)
 
 		travisEnv='\n  - VERSION='"$version"' VARIANT='"$variant$travisEnv"
@@ -81,3 +83,4 @@ done
 
 travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
 echo "$travis" > .travis.yml
+
