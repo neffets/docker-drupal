@@ -80,7 +80,7 @@ WORKDIR /var/www/html
 
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION 8.8.0
-ENV DRUPAL_MD5 fe6cf51411bfb0ae9cf9e8d6f3df0f87
+ENV DRUPAL_MD5 e51156b53a154109c0a048eb8793b8f1
 ENV DRUSH_VERSION 10.1.0
 
 RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
