@@ -22,12 +22,12 @@ declare -A phpVersions=(
 )
 defaultDrushVersion='10.1.0'
 declare -A drushVersions=(
-	[6]='6.7.0'
+	[6]='7.4.0'
 	[7]='8.3.2'
-	[8.5]='9.7.1'
-	[8.6]='10.1.0'
-	[8.7]='10.1.0'
-	[8.8]='10.1.0'
+	[8.5]='9.7.2'
+	[8.6]='10.2.1'
+	[8.7]='10.2.1'
+	[8.8]='10.2.1'
 )
 
 curl -o release -fsSL 'https://www.drupal.org/node/3060/release' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:70.0) Gecko/20191101 Firefox/70.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: de-DE,eo;q=0.8,de;q=0.6,en-US;q=0.4,en;q=0.2'
