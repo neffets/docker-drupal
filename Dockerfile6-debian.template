@@ -2,7 +2,7 @@
 FROM neffets/php5:apache-5.6
 
 # install the PHP extensions we need
-RUN set -ex; \
+RUN set -eux; \
 	\
 	if command -v a2enmod; then \
 		a2enmod rewrite; \

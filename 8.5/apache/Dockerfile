@@ -2,7 +2,7 @@
 FROM php:7.2-apache
 
 # install the PHP extensions we need
-RUN set -ex; \
+RUN set -eux; \
 	\
 	if command -v a2enmod; then \
 		a2enmod rewrite; \
@@ -81,9 +81,10 @@ WORKDIR /var/www/html
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION 8.5.15
 ENV DRUPAL_MD5 7a4ba499132c834e5d33bccae5ac1430
-ENV DRUSH_VERSION 8.3.2
+ENV DRUSH_VERSION 9.7.2
 
-RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
+RUN set -eux; \
+	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
 	&& echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
 	&& tar -xz --strip-components=1 -f drupal.tar.gz \
 	&& rm drupal.tar.gz \
