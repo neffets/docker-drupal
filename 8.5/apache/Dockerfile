@@ -12,26 +12,32 @@ RUN set -eux; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		libgmp-dev \
+		libfreetype6-dev \
 		libjpeg-dev \
 		libpng-dev \
 		libpq-dev \
-        libzip-dev \
+		libzip-dev \
 		default-libmysqlclient-dev \
 		libfontconfig1 \
+		libgmp-dev \
 		libxext6 \
 	; \
 	\
-	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
+	docker-php-ext-configure gd \
+		--with-freetype-dir=/usr \
+		--with-jpeg-dir=/usr \
+		--with-png-dir=/usr \
+	; \
+	\
 	docker-php-ext-install -j "$(nproc)" \
-		bcmath \
 		gd \
-		gmp \
 		opcache \
 		pdo_mysql \
 		pdo_pgsql \
-		mysqli \
 		zip \
+		bcmath \
+		gmp \
+		mysqli \
 	; \
 	\
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
@@ -46,7 +52,7 @@ RUN set -eux; \
 		| xargs -rt apt-mark manual; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6; \
+	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6 wget zip; \
 	rm -rf /var/lib/apt/lists/*
 
 # set recommended PHP.ini settings
@@ -84,12 +90,12 @@ ENV DRUPAL_MD5 7a4ba499132c834e5d33bccae5ac1430
 ENV DRUSH_VERSION 9.7.2
 
 RUN set -eux; \
-	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
-	&& echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
-	&& tar -xz --strip-components=1 -f drupal.tar.gz \
-	&& rm drupal.tar.gz \
-    && (curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer) \
-    && (composer --no-dev install; composer require drush/drush ${DRUSH_VERSION}) \
-	&& chown -R www-data:www-data sites modules themes
+	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
+	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
+	tar -xz --strip-components=1 -f drupal.tar.gz; \
+	rm drupal.tar.gz; \
+	(curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer) \
+	&& (composer require drush/drush ${DRUSH_VERSION}; composer --no-dev install;) ; \
+	chown -R www-data:www-data sites modules themes
 
 # vim:set ft=dockerfile:

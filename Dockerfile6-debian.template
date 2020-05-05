@@ -12,26 +12,30 @@ RUN set -eux; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		libgmp-dev \
 		libjpeg-dev \
 		libpng-dev \
 		libpq-dev \
 		libmysqlclient-dev \
 		libfontconfig1 \
+		libgmp-dev \
 		libxext6 \
 	; \
     ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/local/include/. ; \
 	\
-	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
+	docker-php-ext-configure gd \
+		--with-jpeg-dir=/usr \
+		--with-png-dir=/usr \
+	; \
+	\
 	docker-php-ext-install -j "$(nproc)" \
-		bcmath \
 		gd \
-		gmp \
 		opcache \
 		pdo_mysql \
 		pdo_pgsql \
-		mysqli \
 		zip \
+		bcmath \
+		gmp \
+		mysqli \
 	; \
 	\
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
