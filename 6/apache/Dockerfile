@@ -114,6 +114,6 @@ ENV DRUSH_VERSION 7.4.0
 ##	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2017-022.patch ; \
 ##	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2017-068-6.x-2.x.patch ; \
 
-RUN git clone https://git.drupal.org/project/d6lts-drupal.git ./
+RUN git clone https://github.com/d6lts/drupal.git ./
 
 # vim:set ft=dockerfile:
