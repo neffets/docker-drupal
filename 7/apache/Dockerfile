@@ -52,7 +52,7 @@ RUN set -eux; \
 		| xargs -rt apt-mark manual; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6 wget zip; \
+	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6 wget unzip zip; \
 	rm -rf /var/lib/apt/lists/*
 
 # set recommended PHP.ini settings
@@ -95,7 +95,7 @@ RUN set -eux; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \
 	(curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer) \
-	&& (composer require drush/drush ${DRUSH_VERSION}; composer --no-dev install;) ; \
+	&& (composer require drush/drush ${DRUSH_VERSION}; composer install;) ; \
 	chown -R www-data:www-data sites modules themes
 
 # vim:set ft=dockerfile:
