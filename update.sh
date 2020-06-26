@@ -62,8 +62,10 @@ for version in "${versions[@]}"; do
 			| head -1
 	)"
 	if [ -z "$fullVersion" ]; then
-		echo >&2 "error: cannot find release for $version"
-		exit 1
+		#echo >&2 "error: cannot find release for $version"
+		#exit 1
+		echo "error: cannot find release for $version"
+        continue
 	fi
 	md5="${fullVersion##* }"
 	fullVersion="${fullVersion% $md5}"
@@ -94,3 +96,6 @@ done
 
 travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
 echo "$travis" > .travis.yml
+
+( grep -v "ENV DRUPAL_VERSION" README.md > README.md.tmp; grep -R -h "ENV DRUPAL_VERSION" */apache/* >> README.md.tmp; mv -f README.md.tmp README.md );
+
