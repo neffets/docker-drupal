@@ -61,6 +61,9 @@ for version in "${versions[@]}"; do
 			| grep $rcGrepV -E -- '-rc|-beta|-alpha|-dev' \
 			| head -1
 	)"
+    if [ "6" == "$version" ]; then
+        fullVersion="6.54 from-git-php72-ready"
+    fi
 	if [ -z "$fullVersion" ]; then
 		#echo >&2 "error: cannot find release for $version"
 		#exit 1
