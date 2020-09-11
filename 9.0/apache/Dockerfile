@@ -1,5 +1,5 @@
 # from https://www.drupal.org/docs/8/system-requirements/drupal-8-php-requirements
-FROM php:7.3-apache
+FROM php:7.4-apache
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -85,8 +85,8 @@ RUN { \
 WORKDIR /var/www/html
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 8.9.5
-ENV DRUPAL_MD5 52cd8e69c6a89a96426de990b29f8a61
+ENV DRUPAL_VERSION 9.0.5
+ENV DRUPAL_MD5 
 ENV DRUSH_VERSION 10.2.2
 
 RUN set -eux; \

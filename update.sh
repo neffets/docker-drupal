@@ -12,15 +12,16 @@ versions=( "${versions[@]%/}" )
 # https://www.drupal.org/docs/8/system-requirements/php-requirements#php_required
 defaultPhpVersion='7.3'
 declare -A phpVersions=(
-	[6]='5.6'
 	# https://www.drupal.org/docs/7/system-requirements/php-requirements#php_required
+	#[7]='7.2'
+	[6]='5.6'
 	[7]='7.2'
 	[8.5]='7.2'
 	[8.6]='7.2'
 	[8.7]='7.3'
 	[8.8]='7.3'
 	[8.9]='7.3'
-	[9]='7.4'
+	[9.0]='7.4'
 )
 defaultDrushVersion='10.2.2'
 declare -A drushVersions=(
@@ -31,10 +32,9 @@ declare -A drushVersions=(
 	[8.7]='10.2.2'
 	[8.8]='10.2.2'
 	[8.9]='10.2.2'
-	[9]='10.2.2'
+	[9.0]='10.2.2'
 )
 
-travisEnv=
 for version in "${versions[@]}"; do
 	rcGrepV='-v'
 	rcVersion="${version%-rc}"
@@ -47,8 +47,21 @@ for version in "${versions[@]}"; do
         md5="2ece34c3bb74e8bff5708593fa83eaac"
         oldVersion="6"
     fi
+
+	case "$rcVersion" in
+		6|7|8.*)
+			# e.g. 7.x or 8.x
+			drupalRelease="${rcVersion%%.*}.x"
+			;;
+		9.*)
+			# there is no https://updates.drupal.org/release-history/drupal/9.x (or 9.0.x)
+			# (07/2020) current could also be used for 8.7, 8.8, 8.9, 9.0, 9.1
+			drupalRelease='current'
+			;;
+	esac
+
 	fullVersion="$(
-		wget -qO- "https://updates.drupal.org/release-history/drupal/${rcVersion%%.*}.x" \
+		wget -qO- "https://updates.drupal.org/release-history/drupal/$drupalRelease" \
 			| awk -v RS='[<>]' '
 					$1 == "release" { release = 1; version = ""; mdhash = ""; tag = ""; next }
 					release && $1 ~ /^version|mdhash$/ { tag = $1; next }

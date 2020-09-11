@@ -2,6 +2,7 @@ language: bash
 services: docker
 
 env:
+  - VERSION=9.0 VARIANT=apache
   - VERSION=8.9 VARIANT=apache
   - VERSION=8.8 VARIANT=apache
   - VERSION=8.7 VARIANT=apache
