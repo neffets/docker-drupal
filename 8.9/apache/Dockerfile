@@ -85,8 +85,8 @@ RUN { \
 WORKDIR /var/www/html
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 8.9.5
-ENV DRUPAL_MD5 52cd8e69c6a89a96426de990b29f8a61
+ENV DRUPAL_VERSION 8.9.7
+ENV DRUPAL_MD5 6d300dbeb0aaae986c1b523df4f772aa
 ENV DRUSH_VERSION 10.2.2
 
 RUN set -eux; \
