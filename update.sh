@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eo pipefail
+set -euo pipefail
 
 cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
@@ -10,29 +10,36 @@ fi
 versions=( "${versions[@]%/}" )
 
 # https://www.drupal.org/docs/8/system-requirements/php-requirements#php_required
-defaultPhpVersion='7.3'
+defaultPhpVersion='8.0'
 declare -A phpVersions=(
 	# https://www.drupal.org/docs/7/system-requirements/php-requirements#php_required
-	#[7]='7.2'
+	#[7]='7.4'
 	[6]='5.6'
 	[7]='7.2'
-	[8.5]='7.2'
 	[8.6]='7.2'
 	[8.7]='7.3'
 	[8.8]='7.3'
 	[8.9]='7.3'
 	[9.0]='7.4'
+	[9.1]='8.0'
 )
-defaultDrushVersion='10.2.2'
+defaultDrushVersion='10.3.6'
 declare -A drushVersions=(
 	[6]='7.4.0'
 	[7]='8.3.2'
-	[8.5]='9.7.2'
 	[8.6]='10.2.2'
 	[8.7]='10.2.2'
 	[8.8]='10.2.2'
-	[8.9]='10.2.2'
-	[9.0]='10.2.2'
+	[8.9]='10.3.6'
+	[9.0]='10.3.6'
+	[9.1]='10.3.6'
+)
+
+defaultComposerVersion='1.10'
+declare -A composerVersions=(
+	[8.9]='1.10' # https://github.com/drupal/drupal/blob/8.9.12/composer.lock#L4357-L4358
+	[9.0]='1.10' # https://github.com/drupal/drupal/blob/9.0.10/composer.lock#L4448-L4449
+	[9.1]='2.0' # https://github.com/drupal/drupal/blob/9.1.2/composer.lock#L4730-L4731
 )
 
 for version in "${versions[@]}"; do
@@ -88,30 +95,40 @@ for version in "${versions[@]}"; do
 
 	echo "$version: $fullVersion ($md5)"
 
-	for variant in fpm-alpine fpm apache; do
+	for variant in {apache,fpm}-buster fpm-alpine3.12 apache; do
+		[ -e "$version/$variant" ] || continue
 		dist='debian'
-		if [[ "$variant" = *alpine ]]; then
+		if [[ "$variant" = *alpine* ]]; then
 			dist='alpine'
 		fi
 
-		[ -d "$version/$variant/" ] || continue
-		(
-		#set -x
-		sed -r \
-			-e 's/%%PHP_VERSION%%/'"${phpVersions[$version]:-$defaultPhpVersion}"'/' \
-			-e 's/%%VARIANT%%/'"$variant"'/' \
-			-e 's/%%VERSION%%/'"$fullVersion"'/' \
-			-e 's/%%MD5%%/'"$md5"'/' \
-			-e 's/%%DRUSH_VERSION%%/'"${drushVersions[$version]:-$defaultDrushVersion}"'/' \
-		"./Dockerfile$oldVersion-$dist.template" > "$version/$variant/Dockerfile" || echo "Version $version failed"
+		phpImage="${phpVersions[$version]:-$defaultPhpVersion}-$variant"
+		sedArgs=(
+			-e 's/%%PHP_VERSION%%/'"${phpImage}"'/'
+			-e 's/%%VERSION%%/'"$fullVersion"'/'
+			-e 's/%%MD5%%/'"$md5"'/'
+			-e 's/%%DRUSH_VERSION%%/'"${drushVersions[$version]:-$defaultDrushVersion}"'/'
 		)
 
-		travisEnv='\n  - VERSION='"$version"' VARIANT='"$variant$travisEnv"
+		template="Dockerfile-$dist.template"
+        case "$version" in
+			# 6|7|<=8.7 has no release in drupal/recommended-project
+			# so its Dockerfile is based on the old template
+		    6|7 )
+				template="Dockerfile-${version}-$dist.template"
+				;;
+            "8.6" | "8.7" )
+				template="Dockerfile-8-$dist.template"
+				;;
+            * )
+				composerVersion="${composerVersions[$version]:-$defaultComposerVersion}"
+				sedArgs+=( -e 's/%%COMPOSER_VERSION%%/'"$composerVersion"'/' )
+                ;;
+        esac
+
+		sed -r "${sedArgs[@]}" "$template" > "$version/$variant/Dockerfile"
 	done
 done
 
-travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
-echo "$travis" > .travis.yml
-
-( grep -v "ENV DRUPAL_VERSION" README.md > README.md.tmp; grep -R -h "ENV DRUPAL_VERSION" */apache/* >> README.md.tmp; mv -f README.md.tmp README.md );
+( grep -v "ENV DRUPAL_VERSION" README.md > README.md.tmp; grep -R -h "ENV DRUPAL_VERSION" */apache*/* >> README.md.tmp; mv -f README.md.tmp README.md );
 

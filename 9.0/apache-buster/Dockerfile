@@ -1,5 +1,5 @@
 # from https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:%%PHP_VERSION%%
+FROM php:7.4-apache-buster
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -84,12 +84,12 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-COPY --from=composer:%%COMPOSER_VERSION%% /usr/bin/composer /usr/local/bin/
+COPY --from=composer:1.10 /usr/bin/composer /usr/local/bin/
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION %%VERSION%%
-ENV DRUPAL_MD5 %%MD5%%
-ENV DRUSH_VERSION %%DRUSH_VERSION%%
+ENV DRUPAL_VERSION 9.0.10
+ENV DRUPAL_MD5 
+ENV DRUSH_VERSION 10.3.6
 
 WORKDIR /opt/drupal
 RUN set -eux; \
