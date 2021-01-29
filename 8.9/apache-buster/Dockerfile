@@ -87,8 +87,8 @@ RUN { \
 COPY --from=composer:1.10 /usr/bin/composer /usr/local/bin/
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 8.9.12
-ENV DRUPAL_MD5 95e9da41ed53730d5fe9e12d682ea95e
+ENV DRUPAL_VERSION 8.9.13
+ENV DRUPAL_MD5 75f7a83b14a1e4ec13ca9827f71ccd1c
 ENV DRUSH_VERSION 10.3.6
 
 WORKDIR /opt/drupal
