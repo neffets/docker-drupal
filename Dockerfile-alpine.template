@@ -47,17 +47,22 @@ RUN { \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
+COPY --from=composer:%%COMPOSER_VERSION%% /usr/bin/composer /usr/local/bin/
+ENV PATH=/usr/local/bin:${PATH}
+
 WORKDIR /var/www/html
 
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION %%VERSION%%
 ENV DRUPAL_MD5 %%MD5%%
+ENV DRUSH_VERSION %%DRUSH_VERSION%%
 
 RUN set -eux; \
 	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
 	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \
+	(composer require drush/drush ${DRUSH_VERSION}; composer install;) ; \
 	chown -R www-data:www-data sites modules themes
 
 # vim:set ft=dockerfile:

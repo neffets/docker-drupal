@@ -105,6 +105,7 @@ for version in "${versions[@]}"; do
 			dist='alpine'
 		fi
 
+        composerVersion="${composerVersions[$version]:-$defaultComposerVersion}"
         phpVersion="${phpVersions[$version]:-$defaultPhpVersion}"
 		phpImage="${phpVersions[$version]:-$defaultPhpVersion}-$variant"
 		sedArgs=(
@@ -112,6 +113,7 @@ for version in "${versions[@]}"; do
 			-e 's/%%VERSION%%/'"$fullVersion"'/'
 			-e 's/%%MD5%%/'"$md5"'/'
 			-e 's/%%DRUSH_VERSION%%/'"${drushVersions[$version]:-$defaultDrushVersion}"'/'
+			-e 's/%%COMPOSER_VERSION%%/'"$composerVersion"'/'
 		)
 
 		template="Dockerfile-$dist.template"
@@ -125,8 +127,6 @@ for version in "${versions[@]}"; do
 				template="Dockerfile-8-$dist.template"
 				;;
             * )
-				composerVersion="${composerVersions[$version]:-$defaultComposerVersion}"
-				sedArgs+=( -e 's/%%COMPOSER_VERSION%%/'"$composerVersion"'/' )
                 ;;
         esac
 

@@ -82,6 +82,9 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
+COPY --from=composer:%%COMPOSER_VERSION%% /usr/bin/composer /usr/local/bin/
+ENV PATH=/usr/local/bin:${PATH}
+
 WORKDIR /var/www/html
 
 # https://www.drupal.org/node/3060/release
@@ -94,8 +97,7 @@ RUN set -eux; \
 	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \
-	(curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer) \
-	&& (composer require drush/drush ${DRUSH_VERSION}; composer install;) ; \
+	(composer require drush/drush ${DRUSH_VERSION}; composer install;) ; \
 	chown -R www-data:www-data sites modules themes
 
 # vim:set ft=dockerfile:

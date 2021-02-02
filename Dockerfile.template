@@ -110,6 +110,7 @@ RUN { \
 
 #{{ if env.version | startswith("7") then "" else ( -}}
 COPY --from=composer:{{ .composer.version }} /usr/bin/composer /usr/local/bin/
+ENV PATH=/usr/local/bin:${PATH}
 
 #{{ ) end -}}
 # https://www.drupal.org/node/3060/release
