@@ -82,7 +82,8 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-COPY --from=composer:%%COMPOSER_VERSION%% /usr/bin/composer /usr/local/bin/
+COPY --from=composer:1.10 /usr/bin/composer /usr/local/bin/
+ENV PATH=/usr/local/bin:${PATH}
 
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION 8.6.18

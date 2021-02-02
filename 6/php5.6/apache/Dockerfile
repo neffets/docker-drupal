@@ -89,6 +89,7 @@ WORKDIR /var/www/html
 ENV DRUPAL_VERSION 6.54
 ENV DRUPAL_MD5 from-git-php72-ready
 ENV DRUSH_VERSION 7.4.0
+ENV PATH=/usr/local/bin:${PATH}
 
 #RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
 #	&& echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \

@@ -99,14 +99,15 @@ for version in "${versions[@]}"; do
 	echo "$version: $fullVersion ($md5)"
 
 	for variant in {apache,fpm}-buster fpm-alpine3.12 apache; do
-		[ -e "$version/$variant" ] || continue
+        phpVersion="${phpVersions[$version]:-$defaultPhpVersion}"
+
+		[ -e "$version/php$phpVersion/$variant" ] || continue
 		dist='debian'
 		if [[ "$variant" = *alpine* ]]; then
 			dist='alpine'
 		fi
 
         composerVersion="${composerVersions[$version]:-$defaultComposerVersion}"
-        phpVersion="${phpVersions[$version]:-$defaultPhpVersion}"
 		phpImage="${phpVersions[$version]:-$defaultPhpVersion}-$variant"
 		sedArgs=(
 			-e 's/%%PHP_VERSION%%/'"${phpImage}"'/'
