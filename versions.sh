@@ -85,7 +85,7 @@ for version in "${versions[@]}"; do
 			' \
 			|| :
 	)"
-	[ "$version" == '7' ] || composerVersion="1.10"
+	[ "$version" == '7' ] && composerVersion="1.10"
 	if [ "$version" != '7' ] && [ -z "$composerVersion" ]; then
 		echo >&2 "error: cannot find composer version for '$version' ('$fullVersion')"
 		exit 1
