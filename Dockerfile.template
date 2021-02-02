@@ -108,11 +108,11 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-#{{ if env.version | startswith("7") then "" else ( -}}
+{{ if env.version | startswith("XX7") then "" else ( -}}
 COPY --from=composer:{{ .composer.version }} /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
-#{{ ) end -}}
+{{ ) end -}}
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION {{ .version }}
 {{ if env.version | startswith("7") then ( -}}
