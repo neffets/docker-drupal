@@ -42,7 +42,6 @@ RUN set -eux; \
 	docker-php-ext-configure gd \
 		--with-freetype \
 		--with-jpeg={{ if is_alpine then "/usr/include" else "/usr" end }} \
-		--with-png={{ if is_alpine then "/usr/include" else "/usr" end }} \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
