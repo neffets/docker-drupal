@@ -1,5 +1,5 @@
 # from https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:%%PHP_VERSION%%
+FROM php:7.2-apache-buster
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -82,20 +82,22 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-WORKDIR /var/www/html
+COPY --from=composer:%%COMPOSER_VERSION%% /usr/bin/composer /usr/local/bin/
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION %%VERSION%%
-ENV DRUPAL_MD5 %%MD5%%
-ENV DRUSH_VERSION %%DRUSH_VERSION%%
+ENV DRUPAL_VERSION 8.6.18
+ENV DRUPAL_MD5 6bef7039de8b5cdd28e7971529138e30
+ENV DRUSH_VERSION 10.2.2
 
+WORKDIR /var/www/html
 RUN set -eux; \
 	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
 	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \
-	(curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer) \
-	&& (composer require drush/drush ${DRUSH_VERSION}; composer install;) ; \
+	composer require drush/drush ${DRUSH_VERSION}; composer install; \
 	chown -R www-data:www-data sites modules themes
+
+ENV PATH=${PATH}:/var/www/html/vendor/bin
 
 # vim:set ft=dockerfile:

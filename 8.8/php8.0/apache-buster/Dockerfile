@@ -1,5 +1,11 @@
+#
+# NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
+#
+# PLEASE DO NOT EDIT IT DIRECTLY.
+#
+
 # from https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:7.2-apache-buster
+FROM php:8.0-apache-buster
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -17,6 +23,7 @@ RUN set -eux; \
 		libpng-dev \
 		libpq-dev \
 		libzip-dev \
+# sts for mysql-client
 		default-libmysqlclient-dev \
 		libfontconfig1 \
 		libgmp-dev \
@@ -26,9 +33,7 @@ RUN set -eux; \
 	docker-php-ext-configure gd \
 		--with-freetype \
 		--with-jpeg=/usr \
-		--with-freetype-dir=/usr \
-		--with-jpeg-dir=/usr \
-		--with-png-dir=/usr \
+		--with-png=/usr \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
@@ -84,22 +89,22 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-COPY --from=composer:%%COMPOSER_VERSION%% /usr/bin/composer /usr/local/bin/
+#COPY --from=composer:1.10 /usr/bin/composer /usr/local/bin/
 
-# https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 8.6.18
-ENV DRUPAL_MD5 6bef7039de8b5cdd28e7971529138e30
-ENV DRUSH_VERSION 10.2.2
+## https://www.drupal.org/node/3060/release
+ENV DRUPAL_VERSION 8.8.12
 
-WORKDIR /var/www/html
+WORKDIR /opt/drupal
 RUN set -eux; \
-	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
-	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
-	tar -xz --strip-components=1 -f drupal.tar.gz; \
-	rm drupal.tar.gz; \
-	composer require drush/drush ${DRUSH_VERSION}; composer install; \
-	chown -R www-data:www-data sites modules themes
+	export COMPOSER_HOME="$(mktemp -d)"; \
+	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
+	composer require drush/drush 10.2.2; composer install; \
+	chown -R www-data:www-data web/sites web/modules web/themes; \
+	rmdir /var/www/html; \
+	ln -sf /opt/drupal/web /var/www/html; \
+	# delete composer cache
+	rm -rf "$COMPOSER_HOME"
 
-ENV PATH=${PATH}:/var/www/html/vendor/bin
+ENV PATH=${PATH}:/opt/drupal/vendor/bin
 
 # vim:set ft=dockerfile:

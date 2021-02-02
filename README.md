@@ -1,11 +1,11 @@
 # docker-drupal
-Build docker images for Drupal 6, 7, 8 with support for drush
+Build docker images for Drupal 6, 7, 8.[6789] and 9.[01] with support for drush
 
 @see docker-library/drupal
 
 * extra support for drush
 * extra support for older drupal-6 (version 6.38), included d6lts patches
-* extra support for apache with drupal in a subdir
+* extra support for apache with drupal in a subdir (drupal-6 only!)
 
 **Folgende Versionen werden aktuell gebaut**
 

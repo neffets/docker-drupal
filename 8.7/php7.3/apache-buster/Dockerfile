@@ -24,8 +24,6 @@ RUN set -eux; \
 	; \
 	\
 	docker-php-ext-configure gd \
-		--with-freetype \
-		--with-jpeg=/usr \
 		--with-freetype-dir=/usr \
 		--with-jpeg-dir=/usr \
 		--with-png-dir=/usr \
@@ -84,24 +82,22 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-COPY --from=composer:1.10 /usr/bin/composer /usr/local/bin/
+COPY --from=composer:%%COMPOSER_VERSION%% /usr/bin/composer /usr/local/bin/
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 8.8.12
-ENV DRUPAL_MD5 0ec8f449353645f0401a73494f3f32a7
+ENV DRUPAL_VERSION 8.7.14
+ENV DRUPAL_MD5 e3b57c7ac08d78269c649a3d62cda075
 ENV DRUSH_VERSION 10.2.2
 
-WORKDIR /opt/drupal
+WORKDIR /var/www/html
 RUN set -eux; \
-	export COMPOSER_HOME="$(mktemp -d)"; \
-	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
+	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
+	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
+	tar -xz --strip-components=1 -f drupal.tar.gz; \
+	rm drupal.tar.gz; \
 	composer require drush/drush ${DRUSH_VERSION}; composer install; \
-	chown -R www-data:www-data web/sites web/modules web/themes; \
-	rmdir /var/www/html; \
-	ln -sf /opt/drupal/web /var/www/html; \
-	# delete composer cache
-	rm -rf "$COMPOSER_HOME"
+	chown -R www-data:www-data sites modules themes
 
-ENV PATH=${PATH}:/opt/drupal/vendor/bin
+ENV PATH=${PATH}:/var/www/html/vendor/bin
 
 # vim:set ft=dockerfile:

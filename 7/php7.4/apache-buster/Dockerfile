@@ -1,5 +1,11 @@
+#
+# NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
+#
+# PLEASE DO NOT EDIT IT DIRECTLY.
+#
+
 # from https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:7.3-apache-buster
+FROM php:7.4-apache-buster
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -17,6 +23,7 @@ RUN set -eux; \
 		libpng-dev \
 		libpq-dev \
 		libzip-dev \
+# sts for mysql-client
 		default-libmysqlclient-dev \
 		libfontconfig1 \
 		libgmp-dev \
@@ -26,9 +33,7 @@ RUN set -eux; \
 	docker-php-ext-configure gd \
 		--with-freetype \
 		--with-jpeg=/usr \
-		--with-freetype-dir=/usr \
-		--with-jpeg-dir=/usr \
-		--with-png-dir=/usr \
+		--with-png=/usr \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
@@ -84,22 +89,18 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-COPY --from=composer:%%COMPOSER_VERSION%% /usr/bin/composer /usr/local/bin/
+## https://www.drupal.org/node/3060/release
+ENV DRUPAL_VERSION 7.78
+ENV DRUPAL_MD5 67c8e2974421e8d549ad705169977498
+ENV DRUSH_VERSION 8.3.2
 
-# https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 8.7.14
-ENV DRUPAL_MD5 e3b57c7ac08d78269c649a3d62cda075
-ENV DRUSH_VERSION 10.2.2
-
-WORKDIR /var/www/html
 RUN set -eux; \
 	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
 	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \
-	composer require drush/drush ${DRUSH_VERSION}; composer install; \
+	composer require drush/drush 8.3.2; composer install; \
 	chown -R www-data:www-data sites modules themes
-
 ENV PATH=${PATH}:/var/www/html/vendor/bin
 
 # vim:set ft=dockerfile:

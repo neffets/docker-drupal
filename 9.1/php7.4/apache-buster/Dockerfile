@@ -1,3 +1,9 @@
+#
+# NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
+#
+# PLEASE DO NOT EDIT IT DIRECTLY.
+#
+
 # from https://www.drupal.org/docs/system-requirements/php-requirements
 FROM php:7.4-apache-buster
 
@@ -17,6 +23,7 @@ RUN set -eux; \
 		libpng-dev \
 		libpq-dev \
 		libzip-dev \
+# sts for mysql-client
 		default-libmysqlclient-dev \
 		libfontconfig1 \
 		libgmp-dev \
@@ -26,9 +33,7 @@ RUN set -eux; \
 	docker-php-ext-configure gd \
 		--with-freetype \
 		--with-jpeg=/usr \
-		--with-freetype-dir=/usr \
-		--with-jpeg-dir=/usr \
-		--with-png-dir=/usr \
+		--with-png=/usr \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
@@ -84,18 +89,16 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-COPY --from=composer:1.10 /usr/bin/composer /usr/local/bin/
+#COPY --from=composer:1.10 /usr/bin/composer /usr/local/bin/
 
-# https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 9.0.11
-ENV DRUPAL_MD5 
-ENV DRUSH_VERSION 10.3.6
+## https://www.drupal.org/node/3060/release
+ENV DRUPAL_VERSION 9.1.3
 
 WORKDIR /opt/drupal
 RUN set -eux; \
 	export COMPOSER_HOME="$(mktemp -d)"; \
 	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
-	composer require drush/drush ${DRUSH_VERSION}; composer install; \
+	composer require drush/drush 10.3.6; composer install; \
 	chown -R www-data:www-data web/sites web/modules web/themes; \
 	rmdir /var/www/html; \
 	ln -sf /opt/drupal/web /var/www/html; \
