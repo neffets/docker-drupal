@@ -87,6 +87,6 @@
       "fpm-buster",
       "fpm-alpine3.12"
     ],
-    "version": "9.1.4"
+    "version": "9.1.5"
   }
 }
