@@ -98,7 +98,8 @@ WORKDIR /opt/drupal
 RUN set -eux; \
 	export COMPOSER_HOME="$(mktemp -d)"; \
 	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
-	composer require drush/drush 10.3.6; composer install; \
+	composer install; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush 10.3.6; \
 	chown -R www-data:www-data web/sites web/modules web/themes; \
 	rmdir /var/www/html; \
 	ln -sf /opt/drupal/web /var/www/html; \
