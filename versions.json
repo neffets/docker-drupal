@@ -6,7 +6,7 @@
     "drush": {
       "version": "8.3.2"
     },
-    "md5": "672d35b4e172721452f351ee01644d76",
+    "md5": "cfbbc4cde2782f4e7298db3991ca6f56",
     "phpVersions": [
       "7.4"
     ],
@@ -15,7 +15,7 @@
       "fpm-buster",
       "fpm-alpine3.12"
     ],
-    "version": "7.79"
+    "version": "7.80"
   },
   "8.8": {
     "composer": {
@@ -43,7 +43,7 @@
     "drush": {
       "version": "10.3.6"
     },
-    "md5": "75f7a83b14a1e4ec13ca9827f71ccd1c",
+    "md5": "d4c987a503f9e637b4cc80b48307e50d",
     "phpVersions": [
       "7.4"
     ],
@@ -52,7 +52,7 @@
       "fpm-buster",
       "fpm-alpine3.12"
     ],
-    "version": "8.9.13"
+    "version": "8.9.14"
   },
   "9.0": {
     "composer": {
@@ -69,7 +69,7 @@
       "fpm-buster",
       "fpm-alpine3.12"
     ],
-    "version": "9.0.11"
+    "version": "9.0.12"
   },
   "9.1": {
     "composer": {
@@ -87,6 +87,6 @@
       "fpm-buster",
       "fpm-alpine3.12"
     ],
-    "version": "9.1.6"
+    "version": "9.1.7"
   }
 }
