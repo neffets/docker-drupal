@@ -43,7 +43,7 @@
     "drush": {
       "version": "10.3.6"
     },
-    "md5": "d4c987a503f9e637b4cc80b48307e50d",
+    "md5": "4a5a663fa77a98bb2d5d68222145c764",
     "phpVersions": [
       "7.4"
     ],
@@ -52,7 +52,7 @@
       "fpm-buster",
       "fpm-alpine3.12"
     ],
-    "version": "8.9.14"
+    "version": "8.9.15"
   },
   "9.0": {
     "composer": {
@@ -69,7 +69,7 @@
       "fpm-buster",
       "fpm-alpine3.12"
     ],
-    "version": "9.0.12"
+    "version": "9.0.13"
   },
   "9.1": {
     "composer": {
@@ -87,6 +87,6 @@
       "fpm-buster",
       "fpm-alpine3.12"
     ],
-    "version": "9.1.7"
+    "version": "9.1.8"
   }
 }
