@@ -92,7 +92,7 @@ COPY --from=composer:2.0 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 9.1.9
+ENV DRUPAL_VERSION 9.1.10
 
 WORKDIR /opt/drupal
 RUN set -eux; \
