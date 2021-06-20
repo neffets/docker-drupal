@@ -81,11 +81,11 @@ for version in "${versions[@]}"; do
 				(.packages, ."packages-dev")[]
 				| select(.name == "composer/composer")
 				| .version
-				| split(".")[0:2] | join(".")
+				| split(".")[0:1] | join(".")
 			' \
 			|| :
 	)"
-	[ "$version" == '7' ] && composerVersion="1.10"
+	[ "$version" == '7' ] && composerVersion="1"
 	if [ "$version" != '7' ] && [ -z "$composerVersion" ]; then
 		echo >&2 "error: cannot find composer version for '$version' ('$fullVersion')"
 		exit 1
@@ -95,13 +95,13 @@ for version in "${versions[@]}"; do
 		doc="$(jq <<<"$doc" -c '.composer = { version: env.composerVersion }')"
 	fi
 
-    drushVersion=${drushVersions[$version]:-$defaultDrushVersion}
+	drushVersion=${drushVersions[$version]:-$defaultDrushVersion}
 	if [ -n "$drushVersion" ]; then
 		export drushVersion
 		doc="$(jq <<<"$doc" -c '.drush = { version: env.drushVersion }')"
 	fi
 
-    echo "$version: $fullVersion${composerVersion:+ (composer $composerVersion)} ${drushVersion:+ (drush $drushVersion)}"
+	echo "$version: $fullVersion${composerVersion:+ (composer $composerVersion)} ${drushVersion:+ (drush $drushVersion)}"
 
 	export fullVersion
 	json="$(

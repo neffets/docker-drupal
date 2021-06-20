@@ -1,7 +1,7 @@
 {
   "7": {
     "composer": {
-      "version": "1.10"
+      "version": "1"
     },
     "drush": {
       "version": "8.3.2"
@@ -19,7 +19,7 @@
   },
   "8.8": {
     "composer": {
-      "version": "1.9"
+      "version": "1"
     },
     "drush": {
       "version": "10.2.2"
@@ -38,7 +38,7 @@
   },
   "8.9": {
     "composer": {
-      "version": "1.10"
+      "version": "1"
     },
     "drush": {
       "version": "10.3.6"
@@ -56,7 +56,7 @@
   },
   "9.0": {
     "composer": {
-      "version": "1.10"
+      "version": "1"
     },
     "drush": {
       "version": "10.3.6"
@@ -73,7 +73,7 @@
   },
   "9.1": {
     "composer": {
-      "version": "2.0"
+      "version": "2"
     },
     "drush": {
       "version": "10.3.6"
