@@ -1,0 +1,35 @@
+#!/bin/bash
+
+VERSION="6-apache"
+docker build -t neffets/drupal:$VERSION -f 6/php5.6/apache/Dockerfile 6/php5.6/apache/
+docker push neffets/drupal:$VERSION
+
+VERSION="7-apache"
+docker build -t neffets/drupal:$VERSION -f 7/php7.4/apache-buster/Dockerfile 7/php7.4/apache-buster/
+docker push neffets/drupal:$VERSION
+
+VERSION="8.6-apache"
+docker build -t neffets/drupal:$VERSION -f 8.6/php7.2/apache-buster/Dockerfile 8.6/php7.2/apache-buster/
+docker push neffets/drupal:$VERSION
+
+VERSION="8.7-apache"
+docker build -t neffets/drupal:$VERSION -f 8.7/php7.3/apache-buster/Dockerfile 8.7/php7.3/apache-buster/
+docker push neffets/drupal:$VERSION
+
+VERSION="8.8-apache"
+docker build -t neffets/drupal:$VERSION -f 8.8/php7.4/apache-buster/Dockerfile 8.8/php7.4/apache-buster/
+docker push neffets/drupal:$VERSION
+
+VERSION="8.9-apache"
+docker build -t neffets/drupal:$VERSION -t neffets/drupal:latest -f 8.9/php7.4/apache-buster/Dockerfile 8.9/php7.4/apache-buster/
+docker push neffets/drupal:$VERSION
+docker push neffets/drupal:latest
+
+VERSION="9.0-apache"
+docker build -t neffets/drupal:$VERSION -f 9.0/php7.4/apache-buster/Dockerfile 9.0/php7.4/apache-buster/
+docker push neffets/drupal:$VERSION
+
+VERSION="9.1-apache"
+docker build -t neffets/drupal:$VERSION -f 9.1/php8.0/apache-buster/Dockerfile 9.1/php8.0/apache-buster/
+docker push neffets/drupal:$VERSION
+
