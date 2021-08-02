@@ -54,6 +54,9 @@ RUN set -eux; \
 	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6 wget unzip zip; \
 	rm -rf /var/lib/apt/lists/*
 
+# ADD Variables DRUPAL_SUBDIR, APACHE_UID, APACHE_GID
+COPY ./docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
+
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
