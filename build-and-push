@@ -1,7 +1,7 @@
 #!/bin/bash
 
 VERSION="6-apache"
-docker build -t neffets/drupal:$VERSION -f 6/php7.4/apache/Dockerfile 6/php7.4/apache/
+docker build -t neffets/drupal:$VERSION -f 6/php7.4/apache-buster/Dockerfile 6/php7.4/apache-buster/
 docker push neffets/drupal:$VERSION
 
 VERSION="7-apache"
