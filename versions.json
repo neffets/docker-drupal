@@ -13,7 +13,8 @@
     "variants": [
       "apache-buster",
       "fpm-buster",
-      "fpm-alpine3.12"
+      "fpm-alpine3.14",
+      "fpm-alpine3.13"
     ],
     "version": "7.82"
   },
@@ -26,13 +27,13 @@
     },
     "md5": "0ec8f449353645f0401a73494f3f32a7",
     "phpVersions": [
-      "8.0",
-      "7.4"
+      "8.0"
     ],
     "variants": [
       "apache-buster",
       "fpm-buster",
-      "fpm-alpine3.12"
+      "fpm-alpine3.14",
+      "fpm-alpine3.13"
     ],
     "version": "8.8.12"
   },
@@ -50,7 +51,7 @@
     "variants": [
       "apache-buster",
       "fpm-buster",
-      "fpm-alpine3.12"
+      "fpm-alpine3.13"
     ],
     "version": "8.9.17"
   },
@@ -62,12 +63,14 @@
       "version": "10.3.6"
     },
     "phpVersions": [
+      "8.0",
       "7.4"
     ],
     "variants": [
       "apache-buster",
       "fpm-buster",
-      "fpm-alpine3.12"
+      "fpm-alpine3.14",
+      "fpm-alpine3.13"
     ],
     "version": "9.0.14"
   },
@@ -85,8 +88,27 @@
     "variants": [
       "apache-buster",
       "fpm-buster",
-      "fpm-alpine3.12"
+      "fpm-alpine3.13"
     ],
     "version": "9.1.11"
+  },
+  "9.2": {
+    "composer": {
+      "version": "2"
+    },
+    "drush": {
+      "version": "10.3.6"
+    },
+    "phpVersions": [
+      "8.0",
+      "7.4"
+    ],
+    "variants": [
+      "apache-buster",
+      "fpm-buster",
+      "fpm-alpine3.14",
+      "fpm-alpine3.13"
+    ],
+    "version": "9.2.2"
   }
 }

@@ -1,31 +1,28 @@
+#
+# NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
+#
+# PLEASE DO NOT EDIT IT DIRECTLY.
+#
+
 # from https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:%%PHP_VERSION%%
+FROM php:7.4-fpm-alpine3.14
 
 # install the PHP extensions we need
 RUN set -eux; \
 	\
-	if command -v a2enmod; then \
-		a2enmod rewrite; \
-	fi; \
-	\
-	savedAptMark="$(apt-mark showmanual)"; \
-	\
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
-		libfreetype6-dev \
-		libjpeg-dev \
+	apk add --no-cache --virtual .build-deps \
+		coreutils \
+		freetype-dev \
+		libjpeg-turbo-dev \
 		libpng-dev \
-		libpq-dev \
 		libzip-dev \
-		default-libmysqlclient-dev \
-		libfontconfig1 \
-		libgmp-dev \
-		libxext6 \
+# postgresql-dev is needed for https://bugs.alpinelinux.org/issues/3642
+		postgresql-dev \
 	; \
 	\
 	docker-php-ext-configure gd \
 		--with-freetype \
-		--with-jpeg=/usr \
+		--with-jpeg=/usr/include \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
@@ -39,20 +36,14 @@ RUN set -eux; \
 		mysqli \
 	; \
 	\
-# reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
-	apt-mark auto '.*' > /dev/null; \
-	apt-mark manual $savedAptMark; \
-	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
-		| awk '/=>/ { print $3 }' \
-		| sort -u \
-		| xargs -r dpkg-query -S \
-		| cut -d: -f1 \
-		| sort -u \
-		| xargs -rt apt-mark manual; \
-	\
-	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6 wget unzip zip; \
-	rm -rf /var/lib/apt/lists/*
+	runDeps="$( \
+		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
+			| tr ',' '\n' \
+			| sort -u \
+			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+	)"; \
+	apk add --no-network --virtual .drupal-phpexts-rundeps $runDeps; \
+	apk del --no-network .build-deps
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
@@ -81,22 +72,21 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-COPY --from=composer:%%COMPOSER_VERSION%% /usr/bin/composer /usr/local/bin/
+COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
-WORKDIR /var/www/html
-
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION %%VERSION%%
-ENV DRUPAL_MD5 %%MD5%%
-ENV DRUSH_VERSION %%DRUSH_VERSION%%
+ENV DRUPAL_VERSION 7.82
+ENV DRUPAL_MD5 51f8515161087935662b9835194a779b
+ENV DRUSH_VERSION 8.3.2
 
 RUN set -eux; \
 	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
 	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \
-	(composer require drush/drush ${DRUSH_VERSION}; composer install;) ; \
+	composer require drush/drush 8.3.2; composer install; \
 	chown -R www-data:www-data sites modules themes
+ENV PATH=${PATH}:/var/www/html/vendor/bin
 
 # vim:set ft=dockerfile:

@@ -1,5 +1,5 @@
-# old version drupal 6 is deprecated, but thousands of sites still run on it, so try to keep ongoing security, @see d6lts
-FROM neffets/php5:apache-5.6
+# from https://www.drupal.org/docs/system-requirements/php-requirements
+FROM php:7.4-apache-buster
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -12,19 +12,20 @@ RUN set -eux; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
+		libfreetype6-dev \
 		libjpeg-dev \
 		libpng-dev \
 		libpq-dev \
-		libmysqlclient-dev \
+		libzip-dev \
+		default-libmysqlclient-dev \
 		libfontconfig1 \
 		libgmp-dev \
 		libxext6 \
 	; \
-    ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/local/include/. ; \
 	\
 	docker-php-ext-configure gd \
-		--with-jpeg-dir=/usr \
-		--with-png-dir=/usr \
+		--with-freetype \
+		--with-jpeg=/usr \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
@@ -50,11 +51,8 @@ RUN set -eux; \
 		| xargs -rt apt-mark manual; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	apt-get install -y --no-install-recommends curl tidy mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6; \
+	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6 wget unzip zip; \
 	rm -rf /var/lib/apt/lists/*
-
-# ADD Variables DRUPAL_SUBDIR, APACHE_UID, APACHE_GID
-COPY ./docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
@@ -83,13 +81,15 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
+COPY --from=composer:1.10 /usr/bin/composer /usr/local/bin/
+ENV PATH=/usr/local/bin:${PATH}
+
 WORKDIR /var/www/html
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 6.54
+ENV DRUPAL_VERSION 6.59
 ENV DRUPAL_MD5 from-git-php72-ready
 ENV DRUSH_VERSION 7.4.0
-ENV PATH=/usr/local/bin:${PATH}
 
 #RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
 #	&& echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
@@ -115,6 +115,8 @@ ENV PATH=/usr/local/bin:${PATH}
 ##	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2017-022.patch ; \
 ##	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2017-068-6.x-2.x.patch ; \
 
-RUN git clone https://github.com/d6lts/drupal.git ./
+RUN git clone https://github.com/d6lts/drupal.git ./; \
+	(composer require drush/drush ${DRUSH_VERSION}; composer install;) ; \
+	chown -R www-data:www-data sites modules themes
 
 # vim:set ft=dockerfile:

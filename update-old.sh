@@ -14,7 +14,8 @@ defaultPhpVersion='8.0'
 declare -A phpVersions=(
 	# https://www.drupal.org/docs/7/system-requirements/php-requirements#php_required
 	#[7]='7.4'
-	[6]='5.6'
+	#[6]='5.6'
+	[6]='7.4'
 	[7]='7.2'
 	[8.6]='7.2'
 	[8.7]='7.3'
@@ -85,7 +86,7 @@ for version in "${versions[@]}"; do
 			| head -1
 	)"
     if [ "6" == "$version" ]; then
-        fullVersion="6.54 from-git-php72-ready"
+        fullVersion="6.59 from-git-php72-ready"
     fi
 	if [ -z "$fullVersion" ]; then
 		#echo >&2 "error: cannot find release for $version"
