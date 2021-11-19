@@ -22,6 +22,7 @@ declare -A drushVersions=(
 	[8.9]='10.3.6'
 	[9.0]='10.3.6'
 	[9.1]='10.3.6'
+	[9.2]='10.3.6'
 )
 
 for version in "${versions[@]}"; do
