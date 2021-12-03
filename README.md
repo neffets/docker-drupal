@@ -10,7 +10,7 @@ Build docker images for Drupal 6, 7, 8.[6789] and 9.[01] with support for drush
 **Folgende Versionen werden aktuell gebaut**
 
 ENV DRUPAL_VERSION 6.59
-ENV DRUPAL_VERSION 7.82
+ENV DRUPAL_VERSION 7.83
 ENV DRUPAL_VERSION 8.6.18
 ENV DRUPAL_VERSION 8.7.14
 ENV DRUPAL_VERSION 8.8.12
