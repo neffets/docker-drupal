@@ -85,7 +85,9 @@ RUN set -eux; \
 	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \
-	composer require drush/drush 8.3.2; composer install; \
+	composer require drush/drush 8.3.2; \
+	composer require michelf/php-markdown; \
+	composer install; \
 	chown -R www-data:www-data sites modules themes
 ENV PATH=${PATH}:/var/www/html/vendor/bin
 
