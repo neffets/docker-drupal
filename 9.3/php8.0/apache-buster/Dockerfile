@@ -1,5 +1,11 @@
+#
+# NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
+#
+# PLEASE DO NOT EDIT IT DIRECTLY.
+#
+
 # from https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:%%PHP_VERSION%%
+FROM php:8.0-apache-buster
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -17,6 +23,7 @@ RUN set -eux; \
 		libpng-dev \
 		libpq-dev \
 		libzip-dev \
+# sts for mysql-client
 		default-libmysqlclient-dev \
 		libfontconfig1 \
 		libgmp-dev \
@@ -24,9 +31,8 @@ RUN set -eux; \
 	; \
 	\
 	docker-php-ext-configure gd \
-		--with-freetype-dir=/usr \
-		--with-jpeg-dir=/usr \
-		--with-png-dir=/usr \
+		--with-freetype \
+		--with-jpeg=/usr \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
@@ -80,25 +86,25 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-COPY --from=composer:%%COMPOSER_VERSION%% /usr/bin/composer /usr/local/bin/
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION %%VERSION%%
-ENV DRUPAL_MD5 %%MD5%%
-ENV DRUSH_VERSION %%DRUSH_VERSION%%
+ENV DRUPAL_VERSION 9.3.0
 
-WORKDIR /var/www/html
+WORKDIR /opt/drupal
 RUN set -eux; \
-	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
-	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
-	tar -xz --strip-components=1 -f drupal.tar.gz; \
-	rm drupal.tar.gz; \
-    composer install; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush {{ .drush.version }}; \
+	export COMPOSER_HOME="$(mktemp -d)"; \
+	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
+	composer install; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush 10.3.6; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
-	chown -R www-data:www-data sites modules themes
+	chown -R www-data:www-data web/sites web/modules web/themes; \
+	rmdir /var/www/html; \
+	ln -sf /opt/drupal/web /var/www/html; \
+	# delete composer cache
+	rm -rf "$COMPOSER_HOME"
 
-ENV PATH=${PATH}:/var/www/html/vendor/bin
+ENV PATH=${PATH}:/opt/drupal/vendor/bin
 
 # vim:set ft=dockerfile:
