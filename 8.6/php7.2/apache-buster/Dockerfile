@@ -66,8 +66,6 @@ RUN { \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini ; \
 	{ \
-		echo 'mbstring.http_input="pass"'; \
-		echo 'mbstring.http_output="pass"'; \
 		echo 'log_errors = On'; \
 		echo 'error_log = /dev/stdout'; \
 		echo 'sendmail_path="/usr/bin/msmtp --file /etc/msmtprc -t -i"'; \

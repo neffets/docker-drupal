@@ -42,3 +42,7 @@ VERSION="9.2-apache"
 docker build -t neffets/drupal:$VERSION -f 9.2/php8.0/apache-buster/Dockerfile 9.2/php8.0/apache-buster/
 docker push neffets/drupal:$VERSION
 
+VERSION="9.3-apache"
+docker build -t neffets/drupal:$VERSION -f 9.3/php8.0/apache-buster/Dockerfile 9.3/php8.0/apache-buster/
+docker push neffets/drupal:$VERSION
+
