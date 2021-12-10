@@ -72,8 +72,6 @@ RUN { \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini ; \
 	{ \
-		echo 'mbstring.http_input="pass"'; \
-		echo 'mbstring.http_output="pass"'; \
 		echo 'log_errors = On'; \
 		echo 'error_log = /dev/stdout'; \
 		echo 'sendmail_path="/usr/bin/msmtp --file /etc/msmtprc -t -i"'; \
@@ -100,6 +98,7 @@ RUN set -eux; \
 	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
 	composer install; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush 10.2.2; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
 	chown -R www-data:www-data web/sites web/modules web/themes; \
 	rmdir /var/www/html; \
 	ln -sf /opt/drupal/web /var/www/html; \
