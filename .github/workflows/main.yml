@@ -38,7 +38,7 @@ jobs:
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --platform linux/arm64/v8,linux/amd64  \
             --output "type=image,push=false" \
-            --tag neffets/drupal:9.3 \
+            --tag neffets/drupal:9.3-apache \
             --tag neffets/drupal:latest \
             --file 9.3/php8.0/apache-buster/Dockerfile 9.3/php8.0/apache-buster/
       -
@@ -49,7 +49,7 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --platform linux/arm64/v8,linux/amd64  \
             --output "type=image,push=true" \
-            --tag neffets/drupal:9.3 \
+            --tag neffets/drupal:9.3-apache \
             --tag neffets/drupal:latest \
             --file 9.3/php8.0/apache-buster/Dockerfile 9.3/php8.0/apache-buster/
       -
