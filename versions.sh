@@ -23,6 +23,8 @@ declare -A drushVersions=(
 	[9.0]='10.3.6'
 	[9.1]='10.3.6'
 	[9.2]='10.3.6'
+	[9.3]='10.3.6'
+	[10]='10.3.6'
 )
 
 for version in "${versions[@]}"; do
@@ -37,14 +39,14 @@ for version in "${versions[@]}"; do
 	fi
 
 	case "$rcVersion" in
-		6|8.5|8.6|8.7)
+		6)
             continue;
 			;;
 		7|8.*)
-			# e.g. 7.x or 8.x
+			# e.g. 7.x
 			drupalRelease="${rcVersion%%.*}.x"
 			;;
-		9.*)
+		*)
 			# there is no https://updates.drupal.org/release-history/drupal/9.x
 			# (07/2020) current could also be used for 8.9, 9.x
 			drupalRelease='current'
@@ -96,13 +98,13 @@ for version in "${versions[@]}"; do
 		doc="$(jq <<<"$doc" -c '.composer = { version: env.composerVersion }')"
 	fi
 
+	echo "$version: $fullVersion${composerVersion:+ (composer $composerVersion)}"
 	drushVersion=${drushVersions[$version]:-$defaultDrushVersion}
 	if [ -n "$drushVersion" ]; then
 		export drushVersion
 		doc="$(jq <<<"$doc" -c '.drush = { version: env.drushVersion }')"
 	fi
-
-	echo "$version: $fullVersion${composerVersion:+ (composer $composerVersion)} ${drushVersion:+ (drush $drushVersion)}"
+	echo "addons: ${drushVersion:+ (drush $drushVersion)}"
 
 	export fullVersion
 	json="$(
@@ -110,27 +112,27 @@ for version in "${versions[@]}"; do
 			.[env.version] = {
 				version: env.fullVersion,
 				variants: [
-					if [ "8.9", "9.1" ] | index(env.version) then
-						"buster",
-						"alpine3.13"
+					if [ "8.8", "8.9", "9.0", "9.1" ] | index(env.version) then
+						"buster"
 					else
-						"buster",
-						"alpine3.14",
-						"alpine3.13"
+					"bullseye",
+					"buster",
+					"alpine3.15",
+					"alpine3.14"
 					end
 					| if startswith("alpine") then empty else "apache-" + . end,
 						"fpm-" + .
 				],
 				phpVersions: (
 					# https://www.drupal.org/docs/system-requirements/php-requirements
-					if [ "7", "8.9" ] | index(env.version) then
+					if [ "7", "8.8", "8.9" ] | index(env.version) then
 						[ "7.4" ]
 					elif env.version | startswith("9.") then
 						[ "8.0", "7.4" ]
 					else
-						# https://www.drupal.org/project/drupal/issues/3118147
-						# Require PHP 8 for Drupal 10
-						[ "8.0" ]
+						# https://www.drupal.org/node/3264830
+						# Require PHP 8.1 for Drupal 10
+						[ "8.1" ]
 					end
 				),
 			} + $doc

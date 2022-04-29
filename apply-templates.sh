@@ -29,6 +29,9 @@ generated_warning() {
 for version; do
 	export version
 
+	rm -rf "$version/"
+    sleep 5
+
 	phpVersions="$(jq -r '.[env.version].phpVersions | map(@sh) | join(" ")' versions.json)"
 	eval "phpVersions=( $phpVersions )"
 	variants="$(jq -r '.[env.version].variants | map(@sh) | join(" ")' versions.json)"
