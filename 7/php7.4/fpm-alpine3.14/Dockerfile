@@ -85,7 +85,7 @@ RUN set -eux; \
 	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require --dev drush/drush 8.3.2; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require -W --dev drush/drush 8.3.2; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
 	COMPOSER_MEMORY_LIMIT=-1 composer install; \
 	chown -R www-data:www-data sites modules themes

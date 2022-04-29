@@ -4,7 +4,7 @@
       "version": "2"
     },
     "drush": {
-      "version": "10.3.6"
+      "version": "11.0.9"
     },
     "phpVersions": [
       "8.1"
@@ -100,7 +100,7 @@
       "version": "2"
     },
     "drush": {
-      "version": "10.3.6"
+      "version": "11.0.9"
     },
     "phpVersions": [
       "8.0",

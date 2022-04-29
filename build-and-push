@@ -1,16 +1,16 @@
 #!/bin/bash
 
-docker image pull php:7.2-apache-buster
-docker image pull php:7.3-apache-buster
 docker image pull php:7.4-apache-buster
-docker image pull php:8.0-apache-buster
+docker image pull php:7.4-apache-bullseye
+docker image pull php:8.0-apache-bullseye
+docker image pull php:8.1-apache-bullseye
 
 VERSION="6-apache"
 docker build --no-cache -t neffets/drupal:$VERSION -f 6/php7.4/apache-buster/Dockerfile 6/php7.4/apache-buster/
 docker push neffets/drupal:$VERSION
 
 VERSION="7-apache"
-docker build --no-cache -t neffets/drupal:$VERSION -f 7/php7.4/apache-buster/Dockerfile 7/php7.4/apache-buster/
+docker build --no-cache -t neffets/drupal:$VERSION -f 7/php7.4/apache-bullseye/Dockerfile 7/php7.4/apache-bullseye/
 docker push neffets/drupal:$VERSION
 
 VERSION="8.8-apache"
@@ -21,20 +21,14 @@ VERSION="8.9-apache"
 docker build --no-cache -t neffets/drupal:$VERSION -f 8.9/php7.4/apache-buster/Dockerfile 8.9/php7.4/apache-buster/
 docker push neffets/drupal:$VERSION
 
-VERSION="9.0-apache"
-docker build -t neffets/drupal:$VERSION -f 9.0/php7.4/apache-buster/Dockerfile 9.0/php7.4/apache-buster/
-docker push neffets/drupal:$VERSION
-
-VERSION="9.1-apache"
-docker build -t neffets/drupal:$VERSION -f 9.1/php8.0/apache-buster/Dockerfile 9.1/php8.0/apache-buster/
-docker push neffets/drupal:$VERSION
-
 VERSION="9.2-apache"
-docker build -t neffets/drupal:$VERSION -f 9.2/php8.0/apache-buster/Dockerfile 9.2/php8.0/apache-buster/
+docker build -t neffets/drupal:$VERSION -f 9.2/php8.0/apache-bullseye/Dockerfile 9.2/php8.0/apache-bullseye/
 docker push neffets/drupal:$VERSION
 
 VERSION="9.3-apache"
-docker build -t neffets/drupal:$VERSION -t neffets/drupal:latest -f 9.3/php8.0/apache-buster/Dockerfile 9.3/php8.0/apache-buster/
+docker build -t neffets/drupal:$VERSION -t neffets/drupal:latest -f 9.3/php8.0/apache-bullseye/Dockerfile 9.3/php8.0/apache-bullseye/
 docker push neffets/drupal:$VERSION
 docker push neffets/drupal:latest
 
+VERSION="10.0-apache"
+docker build -t neffets/drupal:$VERSION -f 10.0-rc/php8.1/apache-bullseye/Dockerfile 10.0-rc/php8.1/apache-bullseye/
