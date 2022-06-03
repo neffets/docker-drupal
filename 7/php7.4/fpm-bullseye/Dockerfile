@@ -92,8 +92,8 @@ COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 7.89
-ENV DRUPAL_MD5 924e707e3b1e8269fe623cf2f22ee710
+ENV DRUPAL_VERSION 7.90
+ENV DRUPAL_MD5 4cb30e74d1b57ef32d8efcd664e32f54
 ENV DRUSH_VERSION 8.3.2
 
 RUN set -eux; \

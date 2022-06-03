@@ -26,7 +26,7 @@
     "drush": {
       "version": "8.3.2"
     },
-    "md5": "924e707e3b1e8269fe623cf2f22ee710",
+    "md5": "4cb30e74d1b57ef32d8efcd664e32f54",
     "phpVersions": [
       "7.4"
     ],
@@ -38,7 +38,7 @@
       "fpm-alpine3.15",
       "fpm-alpine3.14"
     ],
-    "version": "7.89"
+    "version": "7.90"
   },
   "8.8": {
     "composer": {
@@ -114,6 +114,6 @@
       "fpm-alpine3.15",
       "fpm-alpine3.14"
     ],
-    "version": "9.3.14"
+    "version": "9.3.15"
   }
 }
