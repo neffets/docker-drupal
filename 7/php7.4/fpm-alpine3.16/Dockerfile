@@ -5,7 +5,7 @@
 #
 
 # from https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:7.4-fpm-alpine3.14
+FROM php:7.4-fpm-alpine3.16
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -72,25 +72,23 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
+COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 9.3.15
+ENV DRUPAL_VERSION 7.90
+ENV DRUPAL_MD5 4cb30e74d1b57ef32d8efcd664e32f54
+ENV DRUSH_VERSION 8.3.2
 
-WORKDIR /opt/drupal
 RUN set -eux; \
-	export COMPOSER_HOME="$(mktemp -d)"; \
-	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
-	composer install; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require -W drush/drush 11.0.9; \
+	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
+	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
+	tar -xz --strip-components=1 -f drupal.tar.gz; \
+	rm drupal.tar.gz; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require -W --dev drush/drush 8.3.2; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
-	chown -R www-data:www-data web/sites web/modules web/themes; \
-	rmdir /var/www/html; \
-	ln -sf /opt/drupal/web /var/www/html; \
-	# delete composer cache
-	rm -rf "$COMPOSER_HOME"
-
-ENV PATH=${PATH}:/opt/drupal/vendor/bin
+	COMPOSER_MEMORY_LIMIT=-1 composer install; \
+	chown -R www-data:www-data sites modules themes
+ENV PATH=${PATH}:/var/www/html/vendor/bin
 
 # vim:set ft=dockerfile:

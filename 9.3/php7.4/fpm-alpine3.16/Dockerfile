@@ -5,7 +5,7 @@
 #
 
 # from https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:8.1-fpm-alpine3.14
+FROM php:7.4-fpm-alpine3.16
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -76,7 +76,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 10.0.0-alpha4
+ENV DRUPAL_VERSION 9.3.15
 
 WORKDIR /opt/drupal
 RUN set -eux; \

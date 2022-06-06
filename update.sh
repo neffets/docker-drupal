@@ -5,4 +5,4 @@ cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
 ./versions.sh "$@"
 ./apply-templates.sh "$@"
-bash update-old.sh 6 8.6 8.7
+bash update-old.sh 6

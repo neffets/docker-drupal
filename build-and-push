@@ -26,7 +26,7 @@ docker build -t neffets/drupal:$VERSION -f 9.2/php8.0/apache-bullseye/Dockerfile
 docker push neffets/drupal:$VERSION
 
 VERSION="9.3-apache"
-docker build -t neffets/drupal:$VERSION -t neffets/drupal:latest -f 9.3/php8.0/apache-bullseye/Dockerfile 9.3/php8.0/apache-bullseye/
+docker build -t neffets/drupal:$VERSION -t neffets/drupal:latest -f 9.3/php8.1/apache-bullseye/Dockerfile 9.3/php8.0/apache-bullseye/
 docker push neffets/drupal:$VERSION
 docker push neffets/drupal:latest
 
