@@ -17,7 +17,7 @@
       "fpm-alpine3.16",
       "fpm-alpine3.15"
     ],
-    "version": "10.0.0-alpha4"
+    "version": "10.0.0-alpha5"
   },
   "7": {
     "composer": {
@@ -93,7 +93,7 @@
       "fpm-alpine3.16",
       "fpm-alpine3.15"
     ],
-    "version": "9.2.20"
+    "version": "9.2.21"
   },
   "9.3": {
     "composer": {
@@ -115,6 +115,6 @@
       "fpm-alpine3.16",
       "fpm-alpine3.15"
     ],
-    "version": "9.3.15"
+    "version": "9.3.16"
   }
 }
