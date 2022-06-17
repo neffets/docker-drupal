@@ -122,8 +122,9 @@ for version in "${versions[@]}"; do
 				],
 				phpVersions: (
 					# https://www.drupal.org/docs/system-requirements/php-requirements
+					# https://www.drupal.org/docs/7/system-requirements/php-requirements
 					if [ "7", "8.8", "8.9" ] | index(env.version) then
-						[ "7.4" ]
+						[ "8.0", "7.4" ]
 					elif env.version | startswith("9.") then
 						[
 							if env.version != "9.2" then
