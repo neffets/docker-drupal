@@ -41,24 +41,6 @@
     ],
     "version": "7.92"
   },
-  "8.8": {
-    "composer": {
-      "version": "1"
-    },
-    "drush": {
-      "version": "10.2.2"
-    },
-    "md5": "0ec8f449353645f0401a73494f3f32a7",
-    "phpVersions": [
-      "8.0",
-      "7.4"
-    ],
-    "variants": [
-      "apache-buster",
-      "fpm-buster"
-    ],
-    "version": "8.8.12"
-  },
   "8.9": {
     "composer": {
       "version": "1"

@@ -18,10 +18,6 @@ VERSION="7-apache"
 docker build --no-cache -t neffets/drupal:$VERSION -f 7/php7.4/apache-bullseye/Dockerfile 7/php7.4/apache-bullseye/
 docker push neffets/drupal:$VERSION
 
-VERSION="8.8-apache"
-docker build -t neffets/drupal:$VERSION -f 8.8/php7.4/apache-buster/Dockerfile 8.8/php7.4/apache-buster/
-docker push neffets/drupal:$VERSION
-
 VERSION="8.9-apache"
 docker build --no-cache -t neffets/drupal:$VERSION -f 8.9/php7.4/apache-buster/Dockerfile 8.9/php7.4/apache-buster/
 docker push neffets/drupal:$VERSION
