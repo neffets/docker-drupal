@@ -12,7 +12,7 @@ Maintained by: [the Docker Community](https://github.com/docker-library/drupal) 
 
 **Folgende Versionen werden aktuell gebaut**
 
-ENV DRUPAL_VERSION 10.0.0-beta2
+ENV DRUPAL_VERSION 10.0.0-rc1
 ENV DRUPAL_VERSION 6.59
 ENV DRUPAL_VERSION 7.92
 ENV DRUPAL_VERSION 8.9.20
