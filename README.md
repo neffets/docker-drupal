@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # docker-drupal
 
 Build docker images for Drupal 6, 7, 8.[89] and 9.[23] and 10.0-rc with support for drush
@@ -15,7 +16,5 @@ Maintained by: [the Docker Community](https://github.com/docker-library/drupal) 
 ENV DRUPAL_VERSION 10.0.0-rc3
 ENV DRUPAL_VERSION 6.59
 ENV DRUPAL_VERSION 7.94
-ENV DRUPAL_VERSION 8.9.20
-ENV DRUPAL_VERSION 9.2.21
 ENV DRUPAL_VERSION 9.3.22
 ENV DRUPAL_VERSION 9.4.9

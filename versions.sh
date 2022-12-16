@@ -21,6 +21,7 @@ declare -A drushVersions=(
 	[9.2]='10.3.6'
 	[9.3]='10.4.3'
 	[9.4]='10.4.3'
+	[9.5]='11.2.5'
 	[10.0]='11.2.5'
 	["10.0-rc"]='11.2.1'
 )
@@ -40,7 +41,7 @@ for version in "${versions[@]}"; do
 		6)
             continue;
 			;;
-		7|8.*)
+		7)
 			# e.g. 7.x
 			drupalRelease="${rcVersion%%.*}.x"
 			;;
@@ -110,30 +111,20 @@ for version in "${versions[@]}"; do
 			.[env.version] = {
 				version: env.fullVersion,
 				variants: [
-					if [ "8.8", "8.9", "9.0", "9.1" ] | index(env.version) then
-						"buster"
-					else
 					"bullseye",
 					"buster",
-					"alpine3.16",
-					"alpine3.15"
-					end
+					"alpine3.17",
+					"alpine3.16"
 					| if startswith("alpine") then empty else "apache-" + . end,
 						"fpm-" + .
 				],
 				phpVersions: (
 					# https://www.drupal.org/docs/system-requirements/php-requirements
 					# https://www.drupal.org/docs/7/system-requirements/php-requirements
-					if [ "7", "8.8", "8.9" ] | index(env.version) then
-						[ "8.0", "7.4" ]
+					if env.version == "7" then
+						[ "8.0" ]
 					elif env.version | startswith("9.") then
-						[
-							if env.version != "9.2" then
-								"8.1"
-							else empty end,
-							"8.0",
-							"7.4"
-						]
+						[ "8.1", "8.0" ]
 					else
 						# https://www.drupal.org/node/3264830
 						# Require PHP 8.1 for Drupal 10

@@ -7,7 +7,8 @@ jqt='.jq-template.awk'
 if [ -n "${BASHBREW_SCRIPTS:-}" ]; then
 	jqt="$BASHBREW_SCRIPTS/jq-template.awk"
 elif [ "$BASH_SOURCE" -nt "$jqt" ]; then
-	wget -qO "$jqt" 'https://github.com/docker-library/bashbrew/raw/5f0c26381fb7cc78b2d217d58007800bdcfbcfa1/scripts/jq-template.awk'
+	# https://github.com/docker-library/bashbrew/blob/master/scripts/jq-template.awk
+	wget -qO "$jqt" 'https://github.com/docker-library/bashbrew/raw/9f6a35772ac863a0241f147c820354e4008edf38/scripts/jq-template.awk'
 fi
 
 if [ "$#" -eq 0 ]; then
@@ -30,7 +31,6 @@ for version; do
 	export version
 
 	rm -rf "$version/"
-    sleep 5
 
 	phpVersions="$(jq -r '.[env.version].phpVersions | map(@sh) | join(" ")' versions.json)"
 	eval "phpVersions=( $phpVersions )"
@@ -42,6 +42,11 @@ for version; do
 
 		for variant in "${variants[@]}"; do
 			export variant
+
+			# https://github.com/docker-library/php/blob/d4616116cbeda0937d08ef89ef27b67c5156befd/versions.sh#L93-L96
+			if [ "$phpVersion" = '8.0' ] && [[ "$variant" = *-alpine* ]] && [[ "$variant" != *-'alpine3.16' ]]; then
+				continue
+			fi
 
 			dir="$version/php$phpVersion/$variant"
 			mkdir -p "$dir"
