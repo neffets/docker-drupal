@@ -99,8 +99,10 @@ RUN set -eux; \
 	export COMPOSER_HOME="$(mktemp -d)"; \
 	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
 	composer install; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require drupal/core-recommended:=$DRUPAL_VERSION drupal/core-composer-scaffold:=$DRUPAL_VERSION drupal/core-project-message:=$DRUPAL_VERSION; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies drush/drush 10.4.3; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
+	composer update; \
 	chown -R www-data:www-data web/sites web/modules web/themes; \
 	rmdir /var/www/html; \
 	ln -sf /opt/drupal/web /var/www/html; \

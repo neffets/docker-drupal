@@ -12,18 +12,12 @@ else
 fi
 versions=( "${versions[@]%/}" )
 
-defaultDrushVersion='10.3.6'
+defaultDrushVersion='11.4.0'
 declare -A drushVersions=(
 	[6]='7.4.0'
 	[7]='8.3.2'
-	[8.8]='10.2.2'
-	[8.9]='10.3.6'
 	[9.2]='10.3.6'
 	[9.3]='10.4.3'
-	[9.4]='10.4.3'
-	[9.5]='11.2.5'
-	[10.0]='11.2.5'
-	["10.0-rc"]='11.2.1'
 )
 
 for version in "${versions[@]}"; do
