@@ -5,7 +5,7 @@
 #
 
 # from https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:8.1-fpm-buster
+FROM php:8.0-apache-bullseye
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -92,7 +92,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 9.3.22
+ENV DRUPAL_VERSION 9.5.0
 
 WORKDIR /opt/drupal
 RUN set -eux; \
@@ -100,7 +100,7 @@ RUN set -eux; \
 	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
 	composer install; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require drupal/core-recommended:=$DRUPAL_VERSION drupal/core-composer-scaffold:=$DRUPAL_VERSION drupal/core-project-message:=$DRUPAL_VERSION; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies drush/drush 10.4.3; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies drush/drush 11.4.0; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
 	composer update; \
 	chown -R www-data:www-data web/sites web/modules web/themes; \
