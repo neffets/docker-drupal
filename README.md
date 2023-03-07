@@ -10,10 +10,9 @@ Build docker images for Drupal 6, 7, 8.[89] and 9.[23] and 10.0-rc with support 
 @see too https://github.com/docker-library/drupal
 Maintained by: [the Docker Community](https://github.com/docker-library/drupal) (*not* the Drupal Community or the Drupal Security Team)
 
-
 **Folgende Versionen werden aktuell gebaut**
 
-ENV DRUPAL_VERSION 10.0.0-rc3
+ENV DRUPAL_VERSION 10.0.4
 ENV DRUPAL_VERSION 6.59
 ENV DRUPAL_VERSION 7.94
 ENV DRUPAL_VERSION 9.4.11

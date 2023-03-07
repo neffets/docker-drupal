@@ -5,35 +5,25 @@
 #
 
 # from https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:8.2-apache-buster
+FROM php:8.1-fpm-alpine3.17
 
 # install the PHP extensions we need
 RUN set -eux; \
 	\
-	if command -v a2enmod; then \
-		a2enmod rewrite; \
-	fi; \
-	\
-	savedAptMark="$(apt-mark showmanual)"; \
-	\
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
-		libfreetype6-dev \
-		libjpeg-dev \
+	apk add --no-cache --virtual .build-deps \
+		coreutils \
+		freetype-dev \
+		libjpeg-turbo-dev \
 		libpng-dev \
-		libpq-dev \
 		libwebp-dev \
 		libzip-dev \
-# sts for mysql-client
-		default-libmysqlclient-dev \
-		libfontconfig1 \
-		libgmp-dev \
-		libxext6 \
+# postgresql-dev is needed for https://bugs.alpinelinux.org/issues/3642
+		postgresql-dev \
 	; \
 	\
 	docker-php-ext-configure gd \
 		--with-freetype \
-		--with-jpeg=/usr \
+		--with-jpeg=/usr/include \
 		--with-webp \
 	; \
 	\
@@ -48,20 +38,14 @@ RUN set -eux; \
 		mysqli \
 	; \
 	\
-# reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
-	apt-mark auto '.*' > /dev/null; \
-	apt-mark manual $savedAptMark; \
-	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
-		| awk '/=>/ { print $3 }' \
-		| sort -u \
-		| xargs -r dpkg-query -S \
-		| cut -d: -f1 \
-		| sort -u \
-		| xargs -rt apt-mark manual; \
-	\
-	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6 wget unzip zip; \
-	rm -rf /var/lib/apt/lists/*
+	runDeps="$( \
+		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
+			| tr ',' '\n' \
+			| sort -u \
+			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+	)"; \
+	apk add --no-network --virtual .drupal-phpexts-rundeps $runDeps; \
+	apk del --no-network .build-deps
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
@@ -70,7 +54,6 @@ RUN { \
 		echo 'opcache.interned_strings_buffer=8'; \
 		echo 'opcache.max_accelerated_files=4000'; \
 		echo 'opcache.revalidate_freq=60'; \
-		echo 'opcache.fast_shutdown=1'; \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini ; \
 	{ \
@@ -92,7 +75,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 10.0.0-rc3
+ENV DRUPAL_VERSION 10.0.4
 
 WORKDIR /opt/drupal
 RUN set -eux; \

@@ -10,37 +10,30 @@ fi
 versions=( "${versions[@]%/}" )
 
 # https://www.drupal.org/docs/8/system-requirements/php-requirements#php_required
-defaultPhpVersion='8.0'
+defaultPhpVersion='8.1'
 declare -A phpVersions=(
 	# https://www.drupal.org/docs/7/system-requirements/php-requirements#php_required
 	#[7]='7.4'
 	#[6]='5.6'
 	[6]='7.4'
-	[7]='7.2'
-	[8.6]='7.2'
-	[8.7]='7.3'
-	[8.8]='7.3'
-	[8.9]='7.3'
-	[9.0]='7.4'
-	[9.1]='8.0'
+	[7]='8.0'
+	[9.4]='8.1'
+	[9.5]='8.1'
 )
 defaultDrushVersion='10.3.6'
 declare -A drushVersions=(
 	[6]='7.4.0'
 	[7]='8.3.2'
-	[8.6]='10.2.2'
-	[8.7]='10.2.2'
-	[8.8]='10.2.2'
-	[8.9]='10.3.6'
-	[9.0]='10.3.6'
-	[9.1]='10.3.6'
+	[9.4]='10.3.6'
+	[9.5]='10.3.6'
 )
 
 defaultComposerVersion='1.10'
 declare -A composerVersions=(
-	[8.9]='1.10' # https://github.com/drupal/drupal/blob/8.9.12/composer.lock#L4357-L4358
-	[9.0]='1.10' # https://github.com/drupal/drupal/blob/9.0.10/composer.lock#L4448-L4449
-	[9.1]='2.0' # https://github.com/drupal/drupal/blob/9.1.2/composer.lock#L4730-L4731
+	[6]='1.10' # old drupal 6 needs no composer
+	[7]='1.10' # 
+	[9.4]='2.5'
+	[9.5]='2.5'
 )
 
 for version in "${versions[@]}"; do
@@ -57,7 +50,7 @@ for version in "${versions[@]}"; do
     fi
 
 	case "$rcVersion" in
-        7|8.8|8.9|9.*)
+        7|9.*)
             continue;
             ;;
 		6|7|8.*)
