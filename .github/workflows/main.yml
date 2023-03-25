@@ -38,9 +38,9 @@ jobs:
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --platform linux/arm64/v8,linux/amd64  \
             --output "type=image,push=false" \
-            --tag neffets/drupal:9.4-apache \
+            --tag neffets/drupal:9.5-apache \
             --tag neffets/drupal:latest \
-            --file 9.4/php8.0/apache-bullseye/Dockerfile 9.4/php8.0/apache-bullseye/
+            --file 9.5/php8.1/apache-bullseye/Dockerfile 9.5/php8.1/apache-bullseye/
       -
         name: Docker Buildx (push)
         if: success() && github.event_name != 'pull_request'
@@ -49,9 +49,9 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --platform linux/arm64/v8,linux/amd64  \
             --output "type=image,push=true" \
-            --tag neffets/drupal:9.4-apache \
+            --tag neffets/drupal:9.5-apache \
             --tag neffets/drupal:latest \
-            --file 9.4/php8.0/apache-bullseye/Dockerfile 9.4/php8.0/apache-bullseye/
+            --file 9.5/php8.1/apache-bullseye/Dockerfile 9.5/php8.1/apache-bullseye/
       -
         name: Inspect image
         if: always() && github.event_name != 'pull_request'
