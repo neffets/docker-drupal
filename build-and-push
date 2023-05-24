@@ -1,8 +1,9 @@
 #!/bin/bash
 
-docker image pull php:7.4-apache-buster
-docker image pull php:8.0-apache-bullseye
+docker image pull php:8.2-apache-bullseye
 docker image pull php:8.1-apache-bullseye
+docker image pull php:8.0-apache-bullseye
+docker image pull php:7.4-apache-buster
 
 VERSION="9.5-apache"
 docker build -t neffets/drupal:$VERSION -t neffets/drupal:latest -f 9.5/php8.1/apache-bullseye/Dockerfile 9.5/php8.1/apache-bullseye/
