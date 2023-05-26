@@ -75,6 +75,7 @@ RUN { \
 	{ \
 		echo 'log_errors = On'; \
 		echo 'error_log = /dev/stdout'; \
+		echo 'expose_php = Off'; \
 		echo 'sendmail_path="/usr/bin/msmtp --file /etc/msmtprc -t -i"'; \
 		echo 'display_errors="stdout"'; \
 		echo 'upload_max_filesize = "3M"'; \
