@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker image pull php:8.2-apache-bullseye
+docker image pull php:8.2-apache-bookworm
 docker image pull php:8.1-apache-bullseye
 docker image pull php:8.0-apache-bullseye
 docker image pull php:7.4-apache-buster
@@ -11,7 +11,7 @@ docker push neffets/drupal:$VERSION
 docker tag neffets/drupal:$VERSION neffets/drupal:latest; docker push neffets/drupal:latest
 
 VERSION="10.0-apache"
-docker build -t neffets/drupal:$VERSION -f 10.0/php8.2/apache-bullseye/Dockerfile 10.0/php8.2/apache-bullseye/
+docker build -t neffets/drupal:$VERSION -f 10.0/php8.2/apache-bookworm/Dockerfile 10.0/php8.2/apache-bookworm/
 docker push neffets/drupal:$VERSION
 
 VERSION="9.4-apache"

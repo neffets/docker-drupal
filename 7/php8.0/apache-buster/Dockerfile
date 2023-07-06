@@ -52,7 +52,7 @@ RUN set -eux; \
 	apt-mark auto '.*' > /dev/null; \
 	apt-mark manual $savedAptMark; \
 	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
-		| awk '/=>/ { print $3 }' \
+		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
 		| sort -u \
 		| xargs -r dpkg-query -S \
 		| cut -d: -f1 \
@@ -92,8 +92,8 @@ COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 7.97
-ENV DRUPAL_MD5 37b63299e115a9e8863f564780a026e9
+ENV DRUPAL_VERSION 7.98
+ENV DRUPAL_MD5 4139f0feecb44a53645242194809b73a
 ENV DRUSH_VERSION 8.3.2
 
 RUN set -eux; \

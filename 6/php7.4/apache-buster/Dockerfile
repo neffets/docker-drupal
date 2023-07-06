@@ -91,7 +91,7 @@ WORKDIR /var/www/html
 
 # https://www.drupal.org/node/3060/release
 ENV DRUPAL_VERSION 6.59
-ENV DRUPAL_MD5 from-git-php72-ready
+ENV DRUPAL_MD5 from-git-php74-ready
 ENV DRUSH_VERSION 7.4.0
 
 #RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \

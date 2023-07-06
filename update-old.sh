@@ -79,7 +79,7 @@ for version in "${versions[@]}"; do
 			| head -1
 	)"
     if [ "6" == "$version" ]; then
-        fullVersion="6.59 from-git-php72-ready"
+        fullVersion="6.59 from-git-php74-ready"
     fi
 	if [ -z "$fullVersion" ]; then
 		#echo >&2 "error: cannot find release for $version"

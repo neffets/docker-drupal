@@ -1,0 +1,110 @@
+#
+# NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
+#
+# PLEASE DO NOT EDIT IT DIRECTLY.
+#
+
+# from https://www.drupal.org/docs/system-requirements/php-requirements
+FROM php:8.2-apache-bookworm
+
+# install the PHP extensions we need
+RUN set -eux; \
+	\
+	if command -v a2enmod; then \
+		a2enmod rewrite; \
+	fi; \
+	\
+	savedAptMark="$(apt-mark showmanual)"; \
+	\
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		libfreetype6-dev \
+		libjpeg-dev \
+		libpng-dev \
+		libpq-dev \
+		libwebp-dev \
+		libzip-dev \
+# sts for mysql-client
+		default-libmysqlclient-dev \
+		libfontconfig1 \
+		libgmp-dev \
+		libxext6 \
+	; \
+	\
+	docker-php-ext-configure gd \
+		--with-freetype \
+		--with-jpeg=/usr \
+		--with-webp \
+	; \
+	\
+	docker-php-ext-install -j "$(nproc)" \
+		gd \
+		opcache \
+		pdo_mysql \
+		pdo_pgsql \
+		zip \
+		bcmath \
+		gmp \
+		mysqli \
+	; \
+	\
+# reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
+	apt-mark auto '.*' > /dev/null; \
+	apt-mark manual $savedAptMark; \
+	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
+		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
+		| sort -u \
+		| xargs -r dpkg-query -S \
+		| cut -d: -f1 \
+		| sort -u \
+		| xargs -rt apt-mark manual; \
+	\
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6 wget unzip zip; \
+	rm -rf /var/lib/apt/lists/*
+
+# set recommended PHP.ini settings
+# see https://secure.php.net/manual/en/opcache.installation.php
+RUN { \
+		echo 'opcache.memory_consumption=128'; \
+		echo 'opcache.interned_strings_buffer=8'; \
+		echo 'opcache.max_accelerated_files=4000'; \
+		echo 'opcache.revalidate_freq=60'; \
+		echo 'opcache.enable_cli=1'; \
+	} > /usr/local/etc/php/conf.d/opcache-recommended.ini ; \
+	{ \
+		echo 'log_errors = On'; \
+		echo 'error_log = /dev/stdout'; \
+		echo 'expose_php = Off'; \
+		echo 'sendmail_path="/usr/bin/msmtp --file /etc/msmtprc -t -i"'; \
+		echo 'display_errors="stdout"'; \
+		echo 'upload_max_filesize = "3M"'; \
+		echo 'post_max_size = "20M"'; \
+	} > /usr/local/etc/php/conf.d/php-overwrite.ini; \
+	{ \
+		echo 'host example.com'; \
+		echo 'from server@localhost'; \
+		echo 'maildomain example.com'; \
+		echo 'syslog off'; \
+	} > /etc/msmtprc
+
+COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
+ENV PATH=/usr/local/bin:${PATH}
+
+# https://www.drupal.org/node/3060/release
+ENV DRUPAL_VERSION 7.98
+ENV DRUPAL_MD5 4139f0feecb44a53645242194809b73a
+ENV DRUSH_VERSION 8.3.2
+
+RUN set -eux; \
+	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
+	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
+	tar -xz --strip-components=1 -f drupal.tar.gz; \
+	rm drupal.tar.gz; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies --dev drush/drush 8.3.2; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
+	COMPOSER_MEMORY_LIMIT=-1 composer install; \
+	chown -R www-data:www-data sites modules themes
+ENV PATH=${PATH}:/var/www/html/vendor/bin
+
+# vim:set ft=dockerfile:
