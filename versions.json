@@ -67,31 +67,6 @@
     ],
     "version": "7.98"
   },
-  "9.4": {
-    "composer": {
-      "version": "2"
-    },
-    "drush": {
-      "version": "11.4.0"
-    },
-    "phpVersions": [
-      "8.2",
-      "8.1",
-      "8.0"
-    ],
-    "variants": [
-      "apache-bookworm",
-      "fpm-bookworm",
-      "apache-bullseye",
-      "fpm-bullseye",
-      "apache-buster",
-      "fpm-buster",
-      "fpm-alpine3.18",
-      "fpm-alpine3.17",
-      "fpm-alpine3.16"
-    ],
-    "version": "9.4.15"
-  },
   "9.5": {
     "composer": {
       "version": "2"
