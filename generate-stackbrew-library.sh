@@ -3,19 +3,19 @@ set -Eeuo pipefail
 
 declare -A aliases=(
 	[9.5]='9'
-	[10.1]='10 latest'
-	[10.2-rc]='rc'
+	[10.2]='10 latest'
+	[10.3-rc]='rc'
 )
 
 defaultDebianSuite='bookworm'
 declare -A debianSuites=(
-	#[9.2]='buster'
+	#[10.0]='bullseye'
 )
 
 defaultPhpVersion='php8.2'
 declare -A defaultPhpVersions=(
 # https://www.drupal.org/docs/7/system-requirements/php-requirements#php_required
-	[7]='php8.0' # PHP 7.4 is EOL, so we don't have a choice but to update the default
+	[7]='php8.1' # PHP 7.4 & 8.0 are EOL, so we don't have a choice but to update the default
 # https://www.drupal.org/docs/system-requirements/php-requirements
 	[9.5]='php8.1'
 )
@@ -110,12 +110,15 @@ join() {
 for version; do
 	export version
 
+	if ! fullVersion="$(jq -er '.[env.version] | if . then .version else empty end' versions.json)"; then
+		continue
+	fi
+
 	phpVersions="$(jq -r '.[env.version].phpVersions | map(@sh) | join(" ")' versions.json)"
 	eval "phpVersions=( $phpVersions )"
 	variants="$(jq -r '.[env.version].variants | map(@sh) | join(" ")' versions.json)"
 	eval "variants=( $variants )"
 
-	fullVersion="$(jq -r '.[env.version].version' versions.json)"
 	latestAlpineVersion="$(jq -r '.[env.version].variants[] | ltrimstr("fpm-") | select(startswith("alpine")) | ltrimstr("alpine")' versions.json | sort -rV | head -1)"
 	debianSuite="${debianSuites[$version]:-$defaultDebianSuite}"
 	versionDefaultPhpVersion="${defaultPhpVersions[$version]:-$defaultPhpVersion}"

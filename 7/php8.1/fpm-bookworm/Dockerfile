@@ -4,14 +4,15 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-# from https://www.drupal.org/docs/system-requirements/php-requirements
+# https://www.drupal.org/docs/system-requirements/php-requirements
 FROM php:8.1-fpm-bookworm
 
 # install the PHP extensions we need
 RUN set -eux; \
 	\
 	if command -v a2enmod; then \
-		a2enmod rewrite; \
+# https://github.com/drupal/drupal/blob/d91d8d0a6d3ffe5f0b6dde8c2fbe81404843edc5/.htaccess (references both mod_expires and mod_rewrite explicitly)
+		a2enmod expires rewrite; \
 	fi; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
@@ -88,16 +89,17 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
-ENV PATH=/usr/local/bin:${PATH}
-
-# https://www.drupal.org/node/3060/release
+# 2023-12-06: https://www.drupal.org/project/drupal/releases/7.99
 ENV DRUPAL_VERSION 7.99
 ENV DRUPAL_MD5 0fbcb06e354309356e6b4e33d2cd242d
 ENV DRUSH_VERSION 8.3.2
+ENV DRUPAL_URL https://ftp.drupal.org/files/projects/drupal-7.99.tar.gz
+ENV DRUPAL_MD5 0fbcb06e354309356e6b4e33d2cd242d
+COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
+ENV PATH=/usr/local/bin:${PATH}
 
 RUN set -eux; \
-	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
+	curl -fSL "$DRUPAL_URL" -o drupal.tar.gz; \
 	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \

@@ -2,7 +2,7 @@
 	def is_alpine:
 		env.variant | index("alpine")
 -}}
-# from https://www.drupal.org/docs/system-requirements/php-requirements
+# https://www.drupal.org/docs/system-requirements/php-requirements
 FROM php:{{ env.phpVersion }}-{{ env.variant }}
 
 # install the PHP extensions we need
@@ -20,7 +20,8 @@ RUN set -eux; \
 		postgresql-dev \
 {{ ) else ( -}}
 	if command -v a2enmod; then \
-		a2enmod rewrite; \
+# https://github.com/drupal/drupal/blob/d91d8d0a6d3ffe5f0b6dde8c2fbe81404843edc5/.htaccess (references both mod_expires and mod_rewrite explicitly)
+		a2enmod expires rewrite; \
 	fi; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
@@ -109,28 +110,15 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-{{ if env.version | startswith("XX7") then "" else ( -}}
+{{ if has("composer") then ( -}}
 COPY --from=composer:{{ .composer.version }} /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-
-{{ ) end -}}
-# https://www.drupal.org/node/3060/release
+{{ ) else "" end -}}
+# {{ .date | strftime("%Y-%m-%d") }}: {{ .notes }}
 ENV DRUPAL_VERSION {{ .version }}
-{{ if env.version | startswith("7") then ( -}}
 ENV DRUPAL_MD5 {{ .md5 }}
 ENV DRUSH_VERSION {{ .drush.version }}
-
-RUN set -eux; \
-	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
-	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
-	tar -xz --strip-components=1 -f drupal.tar.gz; \
-	rm drupal.tar.gz; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies --dev drush/drush {{ .drush.version }}; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
-	COMPOSER_MEMORY_LIMIT=-1 composer install; \
-	chown -R www-data:www-data sites modules themes
-ENV PATH=${PATH}:/var/www/html/vendor/bin
-{{ ) else ( -}}
+{{ if has("composer") then ( -}}
 
 WORKDIR /opt/drupal
 RUN set -eux; \
@@ -148,6 +136,22 @@ RUN set -eux; \
 	rm -rf "$COMPOSER_HOME"
 
 ENV PATH=${PATH}:/opt/drupal/vendor/bin
+{{ ) else ( -}}
+ENV DRUPAL_URL {{ .url }}
+ENV DRUPAL_MD5 {{ .md5 }}
+COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
+ENV PATH=/usr/local/bin:${PATH}
+
+RUN set -eux; \
+	curl -fSL "$DRUPAL_URL" -o drupal.tar.gz; \
+	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
+	tar -xz --strip-components=1 -f drupal.tar.gz; \
+	rm drupal.tar.gz; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies --dev drush/drush {{ .drush.version }}; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
+	COMPOSER_MEMORY_LIMIT=-1 composer install; \
+	chown -R www-data:www-data sites modules themes
+ENV PATH=${PATH}:/var/www/html/vendor/bin
 {{ ) end -}}
 
 # vim:set ft=dockerfile:
