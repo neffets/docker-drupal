@@ -77,7 +77,7 @@ ENV PATH=/usr/local/bin:${PATH}
 # 2024-02-07: https://www.drupal.org/project/drupal/releases/10.2.3
 ENV DRUPAL_VERSION 10.2.3
 ENV DRUPAL_MD5 23000d148f8ea3a1874566491a96ca37
-ENV DRUSH_VERSION 11.4.0
+ENV DRUSH_VERSION 12.4.3
 
 WORKDIR /opt/drupal
 RUN set -eux; \
@@ -85,7 +85,7 @@ RUN set -eux; \
 	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
 	composer install; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require drupal/core-recommended:=$DRUPAL_VERSION drupal/core-composer-scaffold:=$DRUPAL_VERSION drupal/core-project-message:=$DRUPAL_VERSION; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies drush/drush 11.4.0; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies drush/drush 12.4.3; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
 	composer update; \
 	chown -R www-data:www-data web/sites web/modules web/themes; \
