@@ -78,16 +78,18 @@ ENV PATH=/usr/local/bin:${PATH}
 ENV DRUPAL_VERSION 10.1.8
 ENV DRUPAL_MD5 2ea6f94091de2760908557dd3bb1956a
 ENV DRUSH_VERSION 11.4.0
+ENV DRUPAL_COMPOSER_MODULES ""
 
 WORKDIR /opt/drupal
+#CMD ["apache2-foreground"]
+# PRE Routines before official start
+COPY ./apache2-pre-start-drupal /usr/local/bin/apache2-pre-start-drupal
+CMD ["apache2-pre-start-drupal"]
+# Contrib-Modules via docker-compose DRUPAL_COMPOSER_MODULES
+
 RUN set -eux; \
 	export COMPOSER_HOME="$(mktemp -d)"; \
 	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
-	composer install; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require drupal/core-recommended:=$DRUPAL_VERSION drupal/core-composer-scaffold:=$DRUPAL_VERSION drupal/core-project-message:=$DRUPAL_VERSION; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies drush/drush 11.4.0; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
-	composer update; \
 	chown -R www-data:www-data web/sites web/modules web/themes; \
 	rmdir /var/www/html; \
 	ln -sf /opt/drupal/web /var/www/html; \

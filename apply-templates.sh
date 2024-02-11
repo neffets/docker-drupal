@@ -57,6 +57,8 @@ for version; do
 				generated_warning
 				gawk -f "$jqt" Dockerfile.template
 			} > "$dir/Dockerfile"
+
+      cp ./apache2-pre-start-drupal $dir/
 		done
 	done
 done

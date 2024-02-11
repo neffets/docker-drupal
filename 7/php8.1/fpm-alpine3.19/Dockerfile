@@ -76,6 +76,7 @@ RUN { \
 ENV DRUPAL_VERSION 7.99
 ENV DRUPAL_MD5 0fbcb06e354309356e6b4e33d2cd242d
 ENV DRUSH_VERSION 8.3.2
+ENV DRUPAL_COMPOSER_MODULES ""
 ENV DRUPAL_URL https://ftp.drupal.org/files/projects/drupal-7.99.tar.gz
 ENV DRUPAL_MD5 0fbcb06e354309356e6b4e33d2cd242d
 COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
