@@ -90,7 +90,7 @@ ENV PATH=/usr/local/bin:${PATH}
 WORKDIR /var/www/html
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 6.59
+ENV DRUPAL_VERSION 6.60
 ENV DRUPAL_MD5 from-git-php74-ready
 ENV DRUSH_VERSION 7.4.0
 

@@ -53,7 +53,7 @@ RUN set -eux; \
 	apt-mark auto '.*' > /dev/null; \
 	apt-mark manual $savedAptMark; \
 	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
-		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
+		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); printf "*%s\n", so }' \
 		| sort -u \
 		| xargs -r dpkg-query -S \
 		| cut -d: -f1 \
@@ -97,6 +97,13 @@ ENV DRUPAL_MD5 b37ec5755df00f89528881fa9c8cfac5
 ENV DRUSH_VERSION 12.4.3
 ENV DRUPAL_COMPOSER_MODULES ""
 
+# https://github.com/docker-library/drupal/pull/259
+# https://github.com/moby/buildkit/issues/4503
+# https://github.com/composer/composer/issues/11839
+# https://github.com/composer/composer/issues/11854
+# https://github.com/composer/composer/blob/94fe2945456df51e122a492b8d14ac4b54c1d2ce/src/Composer/Console/Application.php#L217-L218
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
 WORKDIR /opt/drupal
 #CMD ["apache2-foreground"]
 # PRE Routines before official start
@@ -107,6 +114,7 @@ CMD ["apache2-pre-start-drupal"]
 RUN set -eux; \
 	export COMPOSER_HOME="$(mktemp -d)"; \
 	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
+	chown -R www-data:www-data web/sites web/modules web/themes; \
 	rmdir /var/www/html; \
 	ln -sf /opt/drupal/web /var/www/html; \
 	# delete composer cache
