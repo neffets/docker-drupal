@@ -9,6 +9,10 @@ docker build -t neffets/drupal:$VERSION -f 10.2/php8.2/apache-bookworm/Dockerfil
 docker push neffets/drupal:$VERSION
 docker tag neffets/drupal:$VERSION neffets/drupal:latest; docker push neffets/drupal:latest
 
+VERSION="10.3-apache"
+docker build -t neffets/drupal:$VERSION -f 10.3/php8.2/apache-bookworm/Dockerfile 10.3/php8.2/apache-bookworm/
+docker push neffets/drupal:$VERSION
+
 VERSION="10.1-apache"
 docker build -t neffets/drupal:$VERSION -f 10.1/php8.2/apache-bookworm/Dockerfile 10.1/php8.2/apache-bookworm/
 docker push neffets/drupal:$VERSION

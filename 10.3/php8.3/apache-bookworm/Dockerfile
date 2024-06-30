@@ -5,7 +5,7 @@
 #
 
 # https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:8.2-apache-bookworm
+FROM php:8.3-apache-bookworm
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -91,9 +91,9 @@ RUN { \
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2024-06-05: https://www.drupal.org/project/drupal/releases/10.3.0-rc1
-ENV DRUPAL_VERSION 10.3.0-rc1
-ENV DRUPAL_MD5 adc503e3b8abcccd2878b867f8575d44
+# 2024-06-20: https://www.drupal.org/project/drupal/releases/10.3.0
+ENV DRUPAL_VERSION 10.3.0
+ENV DRUPAL_MD5 39b263798ab4a0e2c7cee4138cb77296
 ENV DRUSH_VERSION 12.4.3
 ENV DRUPAL_COMPOSER_MODULES ""
 
