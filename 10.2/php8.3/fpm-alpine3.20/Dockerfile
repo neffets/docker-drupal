@@ -5,7 +5,7 @@
 #
 
 # https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:8.1-fpm-alpine3.18
+FROM php:8.3-fpm-alpine3.20
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -74,10 +74,10 @@ RUN { \
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2024-01-17: https://www.drupal.org/project/drupal/releases/10.1.8
-ENV DRUPAL_VERSION 10.1.8
-ENV DRUPAL_MD5 2ea6f94091de2760908557dd3bb1956a
-ENV DRUSH_VERSION 11.4.0
+# 2024-06-06: https://www.drupal.org/project/drupal/releases/10.2.7
+ENV DRUPAL_VERSION 10.2.7
+ENV DRUPAL_MD5 3a7e953bd925520d853f904466c1479e
+ENV DRUSH_VERSION 12.4.3
 ENV DRUPAL_COMPOSER_MODULES ""
 
 # https://github.com/docker-library/drupal/pull/259
@@ -97,6 +97,8 @@ CMD ["apache2-pre-start-drupal"]
 RUN set -eux; \
 	export COMPOSER_HOME="$(mktemp -d)"; \
 	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
+# https://github.com/docker-library/drupal/pull/266#issuecomment-2273985526
+	composer check-platform-reqs; \
 	chown -R www-data:www-data web/sites web/modules web/themes; \
 	rmdir /var/www/html; \
 	ln -sf /opt/drupal/web /var/www/html; \

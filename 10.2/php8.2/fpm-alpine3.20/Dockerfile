@@ -5,7 +5,7 @@
 #
 
 # https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:8.2-fpm-alpine3.18
+FROM php:8.2-fpm-alpine3.20
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -72,25 +72,39 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-# 2024-06-05: https://www.drupal.org/project/drupal/releases/7.101
-ENV DRUPAL_VERSION 7.101
-ENV DRUPAL_MD5 ddcd8cb4e885ae865a3d1a8b06707a67
-ENV DRUSH_VERSION 8.3.2
-ENV DRUPAL_COMPOSER_MODULES ""
-ENV DRUPAL_URL https://ftp.drupal.org/files/projects/drupal-7.101.tar.gz
-ENV DRUPAL_MD5 ddcd8cb4e885ae865a3d1a8b06707a67
-COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
+# 2024-06-06: https://www.drupal.org/project/drupal/releases/10.2.7
+ENV DRUPAL_VERSION 10.2.7
+ENV DRUPAL_MD5 3a7e953bd925520d853f904466c1479e
+ENV DRUSH_VERSION 12.4.3
+ENV DRUPAL_COMPOSER_MODULES ""
+
+# https://github.com/docker-library/drupal/pull/259
+# https://github.com/moby/buildkit/issues/4503
+# https://github.com/composer/composer/issues/11839
+# https://github.com/composer/composer/issues/11854
+# https://github.com/composer/composer/blob/94fe2945456df51e122a492b8d14ac4b54c1d2ce/src/Composer/Console/Application.php#L217-L218
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+WORKDIR /opt/drupal
+#CMD ["apache2-foreground"]
+# PRE Routines before official start
+COPY ./apache2-pre-start-drupal /usr/local/bin/apache2-pre-start-drupal
+CMD ["apache2-pre-start-drupal"]
+# Contrib-Modules via docker-compose DRUPAL_COMPOSER_MODULES
 
 RUN set -eux; \
-	curl -fSL "$DRUPAL_URL" -o drupal.tar.gz; \
-	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
-	tar -xz --strip-components=1 -f drupal.tar.gz; \
-	rm drupal.tar.gz; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies --dev drush/drush 8.3.2; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
-	COMPOSER_MEMORY_LIMIT=-1 composer install; \
-	chown -R www-data:www-data sites modules themes
-ENV PATH=${PATH}:/var/www/html/vendor/bin
+	export COMPOSER_HOME="$(mktemp -d)"; \
+	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
+# https://github.com/docker-library/drupal/pull/266#issuecomment-2273985526
+	composer check-platform-reqs; \
+	chown -R www-data:www-data web/sites web/modules web/themes; \
+	rmdir /var/www/html; \
+	ln -sf /opt/drupal/web /var/www/html; \
+	# delete composer cache
+	rm -rf "$COMPOSER_HOME"
+
+ENV PATH=${PATH}:/opt/drupal/vendor/bin
 
 # vim:set ft=dockerfile:

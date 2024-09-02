@@ -126,9 +126,16 @@ for version in "${versions[@]}"; do
 				[
 					# https://www.drupal.org/project/drupal/releases/10.2.0-rc1#php-deps
 					# Drupal now supports PHP 8.3 and recommends at least PHP 8.2.
-					if [ "7", "10.0", "10.1" ] | index(env.version) then empty else "8.3" end,
-					"8.2",
-					if [ "7", "10.0", "10.1" ] | index(env.version) then "8.1" else empty end,
+					if [ "7", "10.0" ] | index(env.version) then empty else
+						"8.3"
+					end,
+					# https://www.drupal.org/node/3413288 ("Drupal 11 will require PHP 8.3")
+					if [ "7", "10.0", "10.2", "10.3" ] | index(env.version) then
+						"8.2"
+					else empty end,
+					if [ "7", "10.0" ] | index(env.version) then
+						"8.1"
+					else empty end,
 					# https://www.drupal.org/docs/system-requirements/php-requirements
 					# https://www.drupal.org/docs/7/system-requirements/php-requirements
 					empty
@@ -137,8 +144,8 @@ for version in "${versions[@]}"; do
 			variants: [
 				"bookworm",
 				"bullseye",
+				"alpine3.20",
 				"alpine3.19",
-				"alpine3.18",
 				empty
 				| if startswith("alpine") then empty else
 						"apache-" + .
