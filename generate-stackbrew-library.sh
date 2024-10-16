@@ -2,9 +2,9 @@
 set -Eeuo pipefail
 
 declare -A aliases=(
+	[11.0]='11 latest'
+	[10.3]='10'
 	[9.5]='9'
-	[10.2]='10 latest'
-	[10.3-rc]='rc'
 )
 
 defaultDebianSuite='bookworm'
@@ -12,8 +12,11 @@ declare -A debianSuites=(
 	#[10.0]='bullseye'
 )
 
-defaultPhpVersion='php8.2'
+defaultPhpVersion='php8.3'
 declare -A defaultPhpVersions=(
+# releases older than 11 will conservatively stay on 8.2 by default
+	[10.3]='php8.2'
+	[10.2]='php8.2'
 # https://www.drupal.org/docs/7/system-requirements/php-requirements#php_required
 	[7]='php8.1' # PHP 7.4 & 8.0 are EOL, so we don't have a choice but to update the default
 # https://www.drupal.org/docs/system-requirements/php-requirements
@@ -76,14 +79,15 @@ gawkParents='
 
 getArches() {
 	local repo="$1"; shift
+	local officialImagesBase="${BASHBREW_LIBRARY:-https://github.com/docker-library/official-images/raw/HEAD/library}/"
 
 	local parentRepoToArchesStr
 	parentRepoToArchesStr="$(
 		find -name 'Dockerfile' -exec gawk "$gawkParents" '{}' + \
 			| sort -u \
-			| gawk -v officialImagesUrl='https://github.com/docker-library/official-images/raw/master/library/' '
+			| gawk -v officialImagesBase="$officialImagesBase" '
 				$1 !~ /^('"$repo"'|scratch|.*\/.*)(:|$)/ {
-					printf "%s%s\n", officialImagesUrl, $1
+					printf "%s%s\n", officialImagesBase, $1
 				}
 			' \
 			| xargs -r bashbrew cat --format '["{{ .RepoName }}:{{ .TagName }}"]="{{ join " " .TagEntry.Architectures }}"'
