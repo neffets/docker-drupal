@@ -72,13 +72,13 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-# 2024-06-05: https://www.drupal.org/project/drupal/releases/7.101
-ENV DRUPAL_VERSION 7.101
-ENV DRUPAL_MD5 ddcd8cb4e885ae865a3d1a8b06707a67
+# 2024-11-20: https://www.drupal.org/project/drupal/releases/7.102
+ENV DRUPAL_VERSION 7.102
+ENV DRUPAL_MD5 3e97344b47cc87b0f51fc2048f38ee0b
 ENV DRUSH_VERSION 8.3.2
 ENV DRUPAL_COMPOSER_MODULES ""
-ENV DRUPAL_URL https://ftp.drupal.org/files/projects/drupal-7.101.tar.gz
-ENV DRUPAL_MD5 ddcd8cb4e885ae865a3d1a8b06707a67
+ENV DRUPAL_URL https://ftp.drupal.org/files/projects/drupal-7.102.tar.gz
+ENV DRUPAL_MD5 3e97344b47cc87b0f51fc2048f38ee0b
 COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
