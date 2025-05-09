@@ -18,7 +18,6 @@ DRUPAL_COMPOSER_MODULES="drupal/ctools drupal/iframe"
 
 **Folgende Versionen werden aktuell gebaut**
 
-ENV DRUPAL_VERSION 10.1.8
 ENV DRUPAL_VERSION 10.2.12
 ENV DRUPAL_VERSION 10.3.14
 ENV DRUPAL_VERSION 10.4.7

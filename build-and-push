@@ -1,5 +1,6 @@
 #!/bin/bash
 
+docker image pull php:8.4-apache-bookworm
 docker image pull php:8.3-apache-bookworm
 docker image pull php:8.2-apache-bookworm
 docker image pull php:8.1-apache-bullseye
@@ -15,7 +16,7 @@ docker build -t neffets/drupal:$VERSION -f 10.3/php8.2/apache-bookworm/Dockerfil
 docker push neffets/drupal:$VERSION
 
 VERSION="11.1-apache"
-docker build -t neffets/drupal:$VERSION -f 11.1/php8.3/apache-bookworm/Dockerfile 11.1/php8.3/apache-bookworm/
+docker build -t neffets/drupal:$VERSION -f 11.1/php8.4/apache-bookworm/Dockerfile 11.1/php8.4/apache-bookworm/
 docker push neffets/drupal:$VERSION
 
 VERSION="11.0-apache"
