@@ -38,9 +38,9 @@ jobs:
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --platform linux/arm64/v8,linux/amd64  \
             --output "type=image,push=false" \
-            --tag neffets/drupal:10.2-apache \
+            --tag neffets/drupal:10.5-apache \
             --tag neffets/drupal:latest \
-            --file 10.2/php8.2/apache-bookworm/Dockerfile 10.2/php8.2/apache-bookworm/
+            --file 10.5/php8.3/apache-bookworm/Dockerfile 10.5/php8.3/apache-bookworm/
       -
         name: Docker Buildx (push)
         if: success() && github.event_name != 'pull_request'
@@ -49,9 +49,9 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --platform linux/arm64/v8,linux/amd64  \
             --output "type=image,push=true" \
-            --tag neffets/drupal:10.2-apache \
+            --tag neffets/drupal:10.5-apache \
             --tag neffets/drupal:latest \
-            --file 10.2/php8.2/apache-bookworm/Dockerfile 10.2/php8.2/apache-bookworm/
+            --file 10.5/php8.3/apache-bookworm/Dockerfile 10.5/php8.3/apache-bookworm/
       -
         name: Inspect image
         if: always() && github.event_name != 'pull_request'

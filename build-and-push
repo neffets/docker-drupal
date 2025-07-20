@@ -6,6 +6,11 @@ docker image pull php:8.2-apache-bookworm
 docker image pull php:8.1-apache-bullseye
 docker image pull php:7.4-apache-buster
 
+VERSION="10.5-apache"
+docker build -t neffets/drupal:$VERSION -f 10.5/php8.3/apache-bookworm/Dockerfile 10.5/php8.3/apache-bookworm/
+docker push neffets/drupal:$VERSION
+docker tag neffets/drupal:$VERSION neffets/drupal:latest; docker push neffets/drupal:latest
+
 VERSION="10.4-apache"
 docker build -t neffets/drupal:$VERSION -f 10.4/php8.3/apache-bookworm/Dockerfile 10.4/php8.3/apache-bookworm/
 docker push neffets/drupal:$VERSION
