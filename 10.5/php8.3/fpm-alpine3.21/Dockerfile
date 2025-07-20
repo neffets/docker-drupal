@@ -77,7 +77,7 @@ ENV PATH=/usr/local/bin:${PATH}
 # 2025-06-26: https://www.drupal.org/project/drupal/releases/10.5.1
 ENV DRUPAL_VERSION 10.5.1
 ENV DRUPAL_MD5 7a1acdd678a57a5b370f8ee6eeececc9
-ENV DRUSH_VERSION 12.4.3
+ENV DRUSH_VERSION 13.6.0
 ENV DRUPAL_COMPOSER_MODULES ""
 
 # https://github.com/docker-library/drupal/pull/259

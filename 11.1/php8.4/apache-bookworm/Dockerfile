@@ -89,12 +89,19 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
+# https://www.drupal.org/node/3298550
+# Drupal now recommends sites enable PHP output buffering by default, if PHP is run as a server module
+# e.g. with Apache's mod_php
+RUN { \
+		echo 'output_buffering=true'; \
+	} > /usr/local/etc/php/conf.d/docker-php-drupal-recommended.ini
+
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 # 2025-06-05: https://www.drupal.org/project/drupal/releases/11.1.8
 ENV DRUPAL_VERSION 11.1.8
 ENV DRUPAL_MD5 22e4e6a332a22f36fc2ca9ff1527fad6
-ENV DRUSH_VERSION 12.4.3
+ENV DRUSH_VERSION 13.6.0
 ENV DRUPAL_COMPOSER_MODULES ""
 
 # https://github.com/docker-library/drupal/pull/259

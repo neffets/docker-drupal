@@ -159,7 +159,7 @@ ENV PATH=${PATH}:/opt/drupal/vendor/bin
 {{ ) else ( -}}
 ENV DRUPAL_URL {{ .url }}
 ENV DRUPAL_MD5 {{ .md5 }}
-COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
 RUN set -eux; \

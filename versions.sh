@@ -41,7 +41,7 @@ releases="$(
 				[
 					.[]
 					| .supported_branches? // empty,
-						.supported_majors? // empty
+						.supported_majors? // empty, "7", "11.0", "10.3"
 					| split(",")
 				]
 				| flatten
@@ -79,6 +79,7 @@ releases="$(
 			| from_entries
 		'
 )"
+echo $releases;
 
 versions=( "$@" )
 if [ ${#versions[@]} -eq 0 ]; then
@@ -91,13 +92,15 @@ else
 fi
 versions=( "${versions[@]%/}" )
 
-defaultDrushVersion='12.4.3'
+defaultDrushVersion='13.6.0'
 declare -A drushVersions=(
 	[6]='7.4.0'
-	[7]='8.3.2'
+	#[6]='8.4.12'
+	[7]='10.6.1'
 	[9.5]='11.4.0'
 	[10.0]='11.4.0'
 	[10.1]='11.4.0'
+	[10.2]='12.4.3'
 	[10.2]='12.4.3'
 )
 

@@ -7,6 +7,8 @@ RUN set -eux; \
 	if command -v a2enmod; then \
 		a2enmod rewrite; \
 	fi; \
+  /bin/echo -e "deb http://archive.debian.org/debian buster main contrib non-free\ndeb http://archive.debian.org/debian-security buster/updates main contrib non-free\ndeb http://archive.debian.org/debian buster-backports main contrib non-free\n" > /etc/apt/sources.list; \
+  /bin/cat /etc/apt/sources.list; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
 	\

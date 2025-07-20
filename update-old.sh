@@ -16,8 +16,7 @@ declare -A phpVersions=(
 	#[7]='7.4'
 	#[6]='5.6'
 	[6]='7.4'
-	[7]='8.0'
-	[9.4]='8.1'
+	[7]='8.1'
 	[9.5]='8.1'
 )
 defaultDrushVersion='10.3.6'
@@ -32,7 +31,6 @@ defaultComposerVersion='1.10'
 declare -A composerVersions=(
 	[6]='1.10' # old drupal 6 needs no composer
 	[7]='1.10' # 
-	[9.4]='2.5'
 	[9.5]='2.5'
 )
 

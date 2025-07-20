@@ -89,14 +89,14 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
-# 2024-11-20: https://www.drupal.org/project/drupal/releases/7.102
-ENV DRUPAL_VERSION 7.102
-ENV DRUPAL_MD5 3e97344b47cc87b0f51fc2048f38ee0b
-ENV DRUSH_VERSION 8.3.2
+# 2024-12-04: https://www.drupal.org/project/drupal/releases/7.103
+ENV DRUPAL_VERSION 7.103
+ENV DRUPAL_MD5 9330ed0dd9926e82b06afb9cf236d5f6
+ENV DRUSH_VERSION 10.6.1
 ENV DRUPAL_COMPOSER_MODULES ""
-ENV DRUPAL_URL https://ftp.drupal.org/files/projects/drupal-7.102.tar.gz
-ENV DRUPAL_MD5 3e97344b47cc87b0f51fc2048f38ee0b
-COPY --from=composer:1 /usr/bin/composer /usr/local/bin/
+ENV DRUPAL_URL https://ftp.drupal.org/files/projects/drupal-7.103.tar.gz
+ENV DRUPAL_MD5 9330ed0dd9926e82b06afb9cf236d5f6
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
 RUN set -eux; \
@@ -104,7 +104,7 @@ RUN set -eux; \
 	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \
-	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies --dev drush/drush 8.3.2; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies --dev drush/drush 10.6.1; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
 	COMPOSER_MEMORY_LIMIT=-1 composer install; \
 	chown -R www-data:www-data sites modules themes
