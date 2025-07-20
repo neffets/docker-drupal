@@ -10,7 +10,7 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       -
         name: Set up Docker Buildx
         uses: crazy-max/ghaction-docker-buildx@v3
@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       -
         name: Cache Docker layers
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         id: cache
         with:
           path: /tmp/.buildx-cache
@@ -40,7 +40,7 @@ jobs:
             --output "type=image,push=false" \
             --tag neffets/drupal:10.5-apache \
             --tag neffets/drupal:latest \
-            --file 10.5/php8.3/apache-bookworm/Dockerfile 10.5/php8.3/apache-bookworm/
+            --file 10.5/php8.4/apache-bookworm/Dockerfile 10.5/php8.4/apache-bookworm/
       -
         name: Docker Buildx (push)
         if: success() && github.event_name != 'pull_request'
@@ -51,7 +51,7 @@ jobs:
             --output "type=image,push=true" \
             --tag neffets/drupal:10.5-apache \
             --tag neffets/drupal:latest \
-            --file 10.5/php8.3/apache-bookworm/Dockerfile 10.5/php8.3/apache-bookworm/
+            --file 10.5/php8.4/apache-bookworm/Dockerfile 10.5/php8.4/apache-bookworm/
       -
         name: Inspect image
         if: always() && github.event_name != 'pull_request'
