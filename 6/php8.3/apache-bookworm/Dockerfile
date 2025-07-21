@@ -5,13 +5,12 @@
 #
 
 # https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:8.3-fpm-bookworm
+FROM php:8.3-apache-bookworm
 
 # install the PHP extensions we need
 RUN set -eux; \
 	\
 	if command -v a2enmod; then \
-# https://github.com/drupal/drupal/blob/d91d8d0a6d3ffe5f0b6dde8c2fbe81404843edc5/.htaccess (references both mod_expires and mod_rewrite explicitly)
 		a2enmod expires rewrite; \
 	fi; \
 	\
@@ -64,9 +63,6 @@ RUN set -eux; \
 	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6 wget unzip zip; \
 	rm -rf /var/lib/apt/lists/*
 
-# ADD Variables DRUPAL_SUBDIR, APACHE_UID, APACHE_GID
-COPY ./docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
-
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
@@ -92,12 +88,19 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
+# https://www.drupal.org/node/3298550
+# Drupal now recommends sites enable PHP output buffering by default, if PHP is run as a server module
+# e.g. with Apache's mod_php
+RUN { \
+		echo 'output_buffering=true'; \
+	} > /usr/local/etc/php/conf.d/docker-php-drupal-recommended.ini
+
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2025-06-06: https://www.drupal.org/project/drupal/releases/10.4.8
-ENV DRUPAL_VERSION 10.4.8
-ENV DRUPAL_MD5 658564ed27815b2f3e007170355a4a58
-ENV DRUSH_VERSION 13.6.0
+# 2025-03-19: https://www.drupal.org/project/drupal/releases/10.3.14
+ENV DRUPAL_VERSION 6.62
+ENV DRUPAL_MD5 from-git-php83-ready
+ENV DRUSH_VERSION 10.6.2
 ENV DRUPAL_COMPOSER_MODULES ""
 
 # https://github.com/docker-library/drupal/pull/259
@@ -114,17 +117,35 @@ COPY ./apache2-pre-start-drupal /usr/local/bin/apache2-pre-start-drupal
 CMD ["apache2-pre-start-drupal"]
 # Contrib-Modules via docker-compose DRUPAL_COMPOSER_MODULES
 
-RUN set -eux; \
-	export COMPOSER_HOME="$(mktemp -d)"; \
-	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
-# https://github.com/docker-library/drupal/pull/266#issuecomment-2273985526
-	composer check-platform-reqs; \
-	chown -R www-data:www-data web/sites web/modules web/themes; \
-	rmdir /var/www/html; \
-	ln -sf /opt/drupal/web /var/www/html; \
-	# delete composer cache
-	rm -rf "$COMPOSER_HOME"
-
 ENV PATH=${PATH}:/opt/drupal/vendor/bin
+
+#RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
+#	&& echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
+#	&& tar -xz --strip-components=1 -f drupal.tar.gz \
+#	&& rm drupal.tar.gz \
+#	&& chown -R www-data:www-data sites modules themes ; \
+#	git clone https://git.drupal.org/project/d6lts.git \
+#	; patch -p1 < d6lts/common/core/SA-CORE-2018-001.patch \
+#	; patch -p1 < d6lts/common/core/SA-CORE-2018-002.patch \
+#	; patch -p1 < d6lts/common/core/SA-CORE-2018-002-bugfix1.patch \
+#	; patch -p1 < d6lts/common/core/SA-CORE-2018-004.patch \
+#	; patch -p1 < d6lts/common/core/SA-CORE-2018-006.patch \
+#	; patch -p1 < d6lts/common/core/SA-CORE-2019-002.patch \
+#	; patch -p1 < d6lts/common/core/SA-CORE-2019-006.patch \
+#	; echo "*** Drupal CORE patched."
+##	&& patch -p1 -d sites/all/modules/filefield < d6lts/common/contrib/filefield/SA-CORE-2018-004.patch ; \
+##	&& patch -p1 -d sites/all/modules/lightbox2 < d6lts/common/contrib/lightbox2/SA-CONTRIB-2018-064.patch ; \
+##	&& patch -p1 -d sites/all/modules/password_policy < d6lts/common/contrib/password_policy/sa-contrib-2018-077.patch \
+##	&& patch -p1 -d sites/all/modules/print < d6lts/common/contrib/print/SA-CONTRIB-2018-063.patch ; \
+##	&& patch -p1 -d sites/all/modules/session_limit < d6lts/common/contrib/session_limit/SA-CONTRIB-2018-072.patch ; \
+##	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2014-054-6.x-2.x.patch ; \
+##	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2016-036-6.x-2.x.patch ; \
+##	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2017-022.patch ; \
+##	&& patch -p1 -d sites/all/modules/views < d6lts/common/contrib/views/SA-CONTRIB-2017-068-6.x-2.x.patch ; \
+
+RUN git clone https://github.com/neffets/Drupal6-LTS.git ./; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush ${DRUSH_VERSION}; \
+    COMPOSER_MEMORY_LIMIT=-1 composer install; \
+	chown -R www-data:www-data sites modules themes
 
 # vim:set ft=dockerfile:

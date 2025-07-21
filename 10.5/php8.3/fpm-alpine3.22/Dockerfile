@@ -47,6 +47,9 @@ RUN set -eux; \
 	apk add --no-network --virtual .drupal-phpexts-rundeps $runDeps; \
 	apk del --no-network .build-deps
 
+# ADD Variables DRUPAL_SUBDIR, APACHE_UID, APACHE_GID
+COPY ./docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
+
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \

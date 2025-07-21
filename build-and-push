@@ -47,3 +47,7 @@ VERSION="6-apache"
 docker build --no-cache -t neffets/drupal:$VERSION -f 6/php7.4/apache-buster/Dockerfile 6/php7.4/apache-buster/
 docker push neffets/drupal:$VERSION
 
+VERSION="6-apache-php83"
+docker build --no-cache -t neffets/drupal:$VERSION -f 6/php8.3/apache-bookworm/Dockerfile 6/php8.3/apache-bookworm/
+docker push neffets/drupal:$VERSION
+
