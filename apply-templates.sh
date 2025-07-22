@@ -58,6 +58,9 @@ for version; do
 				gawk -f "$jqt" Dockerfile.template
 			} > "$dir/Dockerfile"
 
+      # Support DRUPAL_SUBDIR
+      cp ./docker-php-entrypoint $dir/
+      # Support DRUPAL_COMPOSER_MODULES
       cp ./apache2-pre-start-drupal $dir/
 		done
 	done
