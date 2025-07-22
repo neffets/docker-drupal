@@ -21,8 +21,8 @@ declare -A phpVersions=(
 )
 defaultDrushVersion='10.3.6'
 declare -A drushVersions=(
-	[6]='7.4.0'
-	[7]='8.3.2'
+	[6]='8.4.12'
+	[7]='8.4.12'
 	[9.4]='10.3.6'
 	[9.5]='10.3.6'
 )

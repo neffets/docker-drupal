@@ -78,17 +78,17 @@ RUN { \
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 # 2025-06-26: https://www.drupal.org/project/drupal/releases/10.5.1
-ENV DRUPAL_VERSION 10.5.1
-ENV DRUPAL_MD5 7a1acdd678a57a5b370f8ee6eeececc9
-ENV DRUSH_VERSION 13.6.0
-ENV DRUPAL_COMPOSER_MODULES ""
+ENV DRUPAL_VERSION=10.5.1
+ENV DRUPAL_MD5=7a1acdd678a57a5b370f8ee6eeececc9
+ENV DRUSH_VERSION=13.6.0
+ENV DRUPAL_COMPOSER_MODULES=""
 
 # https://github.com/docker-library/drupal/pull/259
 # https://github.com/moby/buildkit/issues/4503
 # https://github.com/composer/composer/issues/11839
 # https://github.com/composer/composer/issues/11854
 # https://github.com/composer/composer/blob/94fe2945456df51e122a492b8d14ac4b54c1d2ce/src/Composer/Console/Application.php#L217-L218
-ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /opt/drupal
 #CMD ["apache2-foreground"]

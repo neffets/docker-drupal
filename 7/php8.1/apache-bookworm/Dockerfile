@@ -100,12 +100,12 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/docker-php-drupal-recommended.ini
 
 # 2024-12-04: https://www.drupal.org/project/drupal/releases/7.103
-ENV DRUPAL_VERSION 7.103
-ENV DRUPAL_MD5 9330ed0dd9926e82b06afb9cf236d5f6
-ENV DRUSH_VERSION 10.6.1
-ENV DRUPAL_COMPOSER_MODULES ""
-ENV DRUPAL_URL https://ftp.drupal.org/files/projects/drupal-7.103.tar.gz
-ENV DRUPAL_MD5 9330ed0dd9926e82b06afb9cf236d5f6
+ENV DRUPAL_VERSION=7.103
+ENV DRUPAL_MD5=9330ed0dd9926e82b06afb9cf236d5f6
+ENV DRUSH_VERSION=10.6.1
+ENV DRUPAL_COMPOSER_MODULES=""
+ENV DRUPAL_URL=https://ftp.drupal.org/files/projects/drupal-7.103.tar.gz
+ENV DRUPAL_MD5=9330ed0dd9926e82b06afb9cf236d5f6
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 
