@@ -99,10 +99,10 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini ; \
 	{ \
 		echo 'log_errors = On'; \
-		echo 'error_log = /dev/stdout'; \
+		echo 'error_log = /dev/stderr'; \
 		echo 'expose_php = Off'; \
 		echo 'sendmail_path="/usr/bin/msmtp --file /etc/msmtprc -t -i"'; \
-		echo 'display_errors="stdout"'; \
+		echo 'display_errors="stderr"'; \
 		echo 'upload_max_filesize = "3M"'; \
 		echo 'post_max_size = "20M"'; \
 	} > /usr/local/etc/php/conf.d/php-overwrite.ini; \
