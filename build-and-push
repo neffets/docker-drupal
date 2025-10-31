@@ -1,47 +1,43 @@
 #!/bin/bash
 
-docker image pull php:8.4-apache-bookworm
-docker image pull php:8.3-apache-bookworm
-docker image pull php:8.2-apache-bookworm
+docker image pull php:8.4-apache-trixie
+docker image pull php:8.3-apache-trixie
+docker image pull php:8.2-apache-trixie
 docker image pull php:7.4-apache-buster
 
 BUILD_OPTS=${BUILD_OPTS:-}
 
 VERSION="10.5-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.5/php8.3/apache-bookworm/Dockerfile 10.5/php8.3/apache-bookworm/
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.5/php8.3/apache-trixie/Dockerfile 10.5/php8.3/apache-trixie/
 docker push neffets/drupal:$VERSION
 docker tag neffets/drupal:$VERSION neffets/drupal:latest; docker push neffets/drupal:latest
 
 VERSION="10.4-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.4/php8.3/apache-bookworm/Dockerfile 10.4/php8.3/apache-bookworm/
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.4/php8.3/apache-trixie/Dockerfile 10.4/php8.3/apache-trixie/
 docker push neffets/drupal:$VERSION
 
 VERSION="10.3-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.3/php8.3/apache-bookworm/Dockerfile 10.3/php8.3/apache-bookworm/
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.3/php8.3/apache-trixie/Dockerfile 10.3/php8.3/apache-trixie/
 docker push neffets/drupal:$VERSION
 
 VERSION="11.2-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 11.2/php8.4/apache-bookworm/Dockerfile 11.2/php8.4/apache-bookworm/
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 11.2/php8.4/apache-trixie/Dockerfile 11.2/php8.4/apache-trixie/
 docker push neffets/drupal:$VERSION
 
 VERSION="11.1-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 11.1/php8.4/apache-bookworm/Dockerfile 11.1/php8.4/apache-bookworm/
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 11.1/php8.4/apache-trixie/Dockerfile 11.1/php8.4/apache-trixie/
 docker push neffets/drupal:$VERSION
 
 VERSION="11.0-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 11.0/php8.3/apache-bookworm/Dockerfile 11.0/php8.3/apache-bookworm/
-docker push neffets/drupal:$VERSION
-
-VERSION="10.2-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.2/php8.2/apache-bookworm/Dockerfile 10.2/php8.2/apache-bookworm/
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 11.0/php8.3/apache-trixie/Dockerfile 11.0/php8.3/apache-trixie/
 docker push neffets/drupal:$VERSION
 
 VERSION="9.5-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 9.5/php8.1/apache-bookworm/Dockerfile 9.5/php8.1/apache-bookworm/
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 9.5/php8.1/apache-trixie/Dockerfile 9.5/php8.1/apache-trixie/
 docker push neffets/drupal:$VERSION
 
 VERSION="7-apache"
-docker build --no-cache ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 7/php8.3/apache-bookworm/Dockerfile 7/php8.3/apache-bookworm/
+docker build --no-cache ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 7/php8.3/apache-trixie/Dockerfile 7/php8.3/apache-trixie/
 docker push neffets/drupal:$VERSION
 
 VERSION="6-apache"
@@ -49,6 +45,6 @@ docker build --no-cache ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 6/php7.4/apa
 docker push neffets/drupal:$VERSION
 
 VERSION="6-apache-php83"
-docker build --no-cache ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 6/php8.3/apache-bookworm/Dockerfile 6/php8.3/apache-bookworm/
+docker build --no-cache ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 6/php8.3/apache-trixie/Dockerfile 6/php8.3/apache-trixie/
 docker push neffets/drupal:$VERSION
 

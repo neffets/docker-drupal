@@ -101,7 +101,7 @@ declare -A drushVersions=(
 	[10.0]='11.4.0'
 	[10.1]='11.4.0'
 	[10.2]='12.4.3'
-	[10.2]='12.4.3'
+	[10.3]='13.6.0'
 )
 
 for version in "${versions[@]}"; do
@@ -146,8 +146,8 @@ for version in "${versions[@]}"; do
 				]
 			),
 			variants: [
+				"trixie",
 				"bookworm",
-				"bullseye",
 				"alpine3.22",
 				"alpine3.21",
 				empty

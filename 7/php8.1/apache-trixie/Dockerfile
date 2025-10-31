@@ -5,7 +5,7 @@
 #
 
 # https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:8.3-apache-bookworm
+FROM php:8.1-apache-trixie
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -99,39 +99,25 @@ RUN { \
 		echo 'output_buffering=true'; \
 	} > /usr/local/etc/php/conf.d/docker-php-drupal-recommended.ini
 
+# 2024-12-04: https://www.drupal.org/project/drupal/releases/7.103
+ENV DRUPAL_VERSION=7.103
+ENV DRUPAL_MD5=9330ed0dd9926e82b06afb9cf236d5f6
+ENV DRUSH_VERSION=10.6.1
+ENV DRUPAL_COMPOSER_MODULES=""
+ENV DRUPAL_URL=https://ftp.drupal.org/files/projects/drupal-7.103.tar.gz
+ENV DRUPAL_MD5=9330ed0dd9926e82b06afb9cf236d5f6
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2025-10-02: https://www.drupal.org/project/drupal/releases/10.5.4
-ENV DRUPAL_VERSION=10.5.4
-ENV DRUPAL_MD5=d9ba52a01071610c1d1f863291d073ae
-ENV DRUSH_VERSION=13.6.0
-ENV DRUPAL_COMPOSER_MODULES=""
-
-# https://github.com/docker-library/drupal/pull/259
-# https://github.com/moby/buildkit/issues/4503
-# https://github.com/composer/composer/issues/11839
-# https://github.com/composer/composer/issues/11854
-# https://github.com/composer/composer/blob/94fe2945456df51e122a492b8d14ac4b54c1d2ce/src/Composer/Console/Application.php#L217-L218
-ENV COMPOSER_ALLOW_SUPERUSER=1
-
-WORKDIR /opt/drupal
-#CMD ["apache2-foreground"]
-# PRE Routines before official start
-COPY ./apache2-pre-start-drupal /usr/local/bin/apache2-pre-start-drupal
-CMD ["apache2-pre-start-drupal"]
-# Contrib-Modules via docker-compose DRUPAL_COMPOSER_MODULES
 
 RUN set -eux; \
-	export COMPOSER_HOME="$(mktemp -d)"; \
-	composer create-project --no-interaction "drupal/recommended-project:$DRUPAL_VERSION" ./; \
-# https://github.com/docker-library/drupal/pull/266#issuecomment-2273985526
-	composer check-platform-reqs; \
-	chown -R www-data:www-data web/sites web/modules web/themes; \
-	rmdir /var/www/html; \
-	ln -sf /opt/drupal/web /var/www/html; \
-	# delete composer cache
-	rm -rf "$COMPOSER_HOME"
-
-ENV PATH=${PATH}:/opt/drupal/vendor/bin
+	curl -fSL "$DRUPAL_URL" -o drupal.tar.gz; \
+	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
+	tar -xz --strip-components=1 -f drupal.tar.gz; \
+	rm drupal.tar.gz; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies --dev drush/drush 10.6.1; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
+	COMPOSER_MEMORY_LIMIT=-1 composer install; \
+	chown -R www-data:www-data sites modules themes
+ENV PATH=${PATH}:/var/www/html/vendor/bin
 
 # vim:set ft=dockerfile:

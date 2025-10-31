@@ -7,9 +7,9 @@ declare -A aliases=(
 	[9.5]='9'
 )
 
-defaultDebianSuite='bookworm'
+defaultDebianSuite='trixie'
 declare -A debianSuites=(
-	#[10.0]='bullseye'
+	#[11.2]='bookworm'
 )
 
 defaultPhpVersion='php8.4'
