@@ -7,22 +7,10 @@ docker image pull php:7.4-apache-buster
 
 BUILD_OPTS=${BUILD_OPTS:-}
 
-VERSION="10.5-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.5/php8.3/apache-trixie/Dockerfile 10.5/php8.3/apache-trixie/
-docker push neffets/drupal:$VERSION
-docker tag neffets/drupal:$VERSION neffets/drupal:latest; docker push neffets/drupal:latest
-
 VERSION="10.6-apache"
 docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.6/php8.4/apache-trixie/Dockerfile 10.6/php8.4/apache-trixie/
 docker push neffets/drupal:$VERSION
-
-VERSION="10.4-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.4/php8.3/apache-trixie/Dockerfile 10.4/php8.3/apache-trixie/
-docker push neffets/drupal:$VERSION
-
-VERSION="10.3-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.3/php8.3/apache-trixie/Dockerfile 10.3/php8.3/apache-trixie/
-docker push neffets/drupal:$VERSION
+docker tag neffets/drupal:$VERSION neffets/drupal:latest; docker push neffets/drupal:latest
 
 VERSION="11.3-apache"
 docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 11.3/php8.4/apache-trixie/Dockerfile 11.3/php8.4/apache-trixie/
@@ -34,6 +22,18 @@ docker push neffets/drupal:$VERSION
 
 VERSION="11.1-apache"
 docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 11.1/php8.4/apache-trixie/Dockerfile 11.1/php8.4/apache-trixie/
+docker push neffets/drupal:$VERSION
+
+VERSION="10.5-apache"
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.5/php8.3/apache-trixie/Dockerfile 10.5/php8.3/apache-trixie/
+docker push neffets/drupal:$VERSION
+
+VERSION="10.4-apache"
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.4/php8.3/apache-trixie/Dockerfile 10.4/php8.3/apache-trixie/
+docker push neffets/drupal:$VERSION
+
+VERSION="10.3-apache"
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.3/php8.3/apache-trixie/Dockerfile 10.3/php8.3/apache-trixie/
 docker push neffets/drupal:$VERSION
 
 VERSION="9.5-apache"
