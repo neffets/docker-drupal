@@ -37,7 +37,7 @@ docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.3/php8.3/apache-trix
 docker push neffets/drupal:$VERSION
 
 VERSION="9.5-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 9.5/php8.1/apache-trixie/Dockerfile 9.5/php8.1/apache-trixie/
+docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 9.5/php8.1/apache-bookworm/Dockerfile 9.5/php8.1/apache-bookworm/
 docker push neffets/drupal:$VERSION
 
 VERSION="7-apache"
