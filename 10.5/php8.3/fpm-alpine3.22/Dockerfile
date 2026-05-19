@@ -29,13 +29,13 @@ RUN set -eux; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
 		gd \
-		opcache \
 		pdo_mysql \
 		pdo_pgsql \
 		zip \
 		bcmath \
 		gmp \
 		mysqli \
+		opcache \
 	; \
 	\
 	runDeps="$( \

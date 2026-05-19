@@ -29,13 +29,13 @@ RUN set -eux; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
 		gd \
-		opcache \
 		pdo_mysql \
 		pdo_pgsql \
 		zip \
 		bcmath \
 		gmp \
 		mysqli \
+		opcache \
 	; \
 	\
 	runDeps="$( \
@@ -77,9 +77,9 @@ RUN { \
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2026-04-15: https://www.drupal.org/project/drupal/releases/10.6.7
-ENV DRUPAL_VERSION=10.6.7
-ENV DRUPAL_MD5=876da370e3d06fd74a95084922bad3fb
+# 2026-05-06: https://www.drupal.org/project/drupal/releases/10.6.8
+ENV DRUPAL_VERSION=10.6.8
+ENV DRUPAL_MD5=3c7903bffdd040ae51edb14c82cd4cf3
 ENV DRUSH_VERSION=13.6.2
 ENV DRUPAL_COMPOSER_MODULES=""
 

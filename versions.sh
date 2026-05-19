@@ -26,7 +26,7 @@ else
 fi
 
 releases="$(
-	wget -qO- 'https://updates.drupal.org/release-history/drupal/current' 'https://updates.drupal.org/release-history/drupal/7.x' \
+	wget -qO- 'https://updates.drupal.org/release-history/drupal/current' \
 		| $yq -r '@json' \
 		| jq -c '
 			# https://stackoverflow.com/a/75770668/433558
@@ -36,19 +36,16 @@ releases="$(
 				| map(split(".") | map(tonumber? // .))
 				| .[1] |= (. // {})
 			;
-			[ .project | if type == "array" then .[] else . end ] # normalize to an array, even if we only fetch one URL (not both "current" and "7.x" -- otherwise this can just be ".project" and we can drop the ".[]"s below)
-			| (
-				[
-					.[]
-					| .supported_branches? // empty,
-						.supported_majors? // empty, "7", "11.0", "10.3"
-					| split(",")
-				]
-				| flatten
-				| map(rtrimstr("."))
-			) as $versions
+			.project
+			| [
+				.supported_branches? // empty,
+					.supported_majors? // empty
+				| split(",")
+				| .[]
+				| rtrimstr(".")
+			] as $versions
 			| reduce (
-				.[].releases.release[]
+				.releases.release[]
 				# skip "dev" releases entirely (download artifacts are too unstable / change too often)
 				| select(
 					.status == "published"
@@ -61,7 +58,7 @@ releases="$(
 				# add a key for the appropriate "X.Y" or "X.Y-rc" value
 				| .folder = (.version | ([ split("[.-]"; "") | if .[0] == "7" then .[0] else .[0,1] end ] | join(".")) + if index("-") then "-rc" else "" end)
 				# filter to *just* versions that the upstream file claims are actually supported ("supported_branches")
-				| select((.folder | rtrimstr("-rc")) as $ver | $versions | index($ver) | not|not)
+				| select((.folder | rtrimstr("-rc")) | IN($versions[]) | not|not)
 			) as $rel ({}; .[$rel.version] = $rel)
 			| to_entries
 			# put all releases in sorted order
@@ -126,30 +123,39 @@ for version in "${versions[@]}"; do
 			# TODO adjust this in a way that is easier to manage over time (semi-automatic variant combinations, for example, based on availability/supported status of upstream PHP images)
 			phpVersions: (
 				# https://www.drupal.org/docs/system-requirements/php-requirements
-				[
+				[ limit(2;
+					# we support up to two PHP versions per Drupal version
+
+					# Drupal 11.3+ supports PHP 8.5
+					if env.version | IN("10.5", "10.6", "11.2") then empty else
+						"8.5"
+					end,
+
 					# Drupal 11.1+ and 10.4+ support PHP 8.4
-					if env.version | IN("10.3", "11.0", "10.2", "9.5", "7") then empty else
+					# "8.4",
+					if env.version | IN("9.5", "7") then empty else
 						"8.4"
 					end,
-					# https://www.drupal.org/project/drupal/releases/10.2.0-rc1#php-deps
-					# Drupal supports PHP 8.3 and recommends at least PHP 8.2.
+
+					# Drupal 11.3+ and 10.6+ recommend PHP 8.4; keep 8.3 for 'existing' builds
+					# https://github.com/docker-library/drupal/pull/299
+					# https://www.drupal.org/project/drupal/releases/10.6.0#platform
+					# https://www.drupal.org/project/drupal/releases/11.3.0#platform
 					"8.3",
+
 					# https://www.drupal.org/node/3413288 ("Drupal 11 will require PHP 8.3")
-					if env.version | IN("10.3") then
-						"8.2"
-					else empty end,
 					if env.version | IN("9.5", "7") then
 						"8.1"
 					else empty end,
 					# https://www.drupal.org/docs/system-requirements/php-requirements
 					empty
-				]
+				) ]
 			),
 			variants: [
 				"trixie",
 				"bookworm",
+				"alpine3.23",
 				"alpine3.22",
-				"alpine3.21",
 				empty
 				| if startswith("alpine") then empty else
 						"apache-" + .

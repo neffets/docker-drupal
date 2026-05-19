@@ -40,13 +40,13 @@ RUN set -eux; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
 		gd \
-		opcache \
 		pdo_mysql \
 		pdo_pgsql \
 		zip \
 		bcmath \
 		gmp \
 		mysqli \
+		opcache \
 	; \
 	\
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
@@ -94,9 +94,9 @@ RUN { \
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2026-04-20: https://www.drupal.org/project/drupal/releases/11.3.8
-ENV DRUPAL_VERSION=11.3.8
-ENV DRUPAL_MD5=786ad1163c0596430452cf6f895d83ab
+# 2026-05-06: https://www.drupal.org/project/drupal/releases/11.3.9
+ENV DRUPAL_VERSION=11.3.9
+ENV DRUPAL_MD5=858a5d745f0b769429fdc83ac68d4fa8
 ENV DRUSH_VERSION=13.6.2
 ENV DRUPAL_COMPOSER_MODULES=""
 
