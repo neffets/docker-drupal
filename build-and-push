@@ -20,10 +20,6 @@ VERSION="11.2-apache"
 docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 11.2/php8.4/apache-trixie/Dockerfile 11.2/php8.4/apache-trixie/
 docker push neffets/drupal:$VERSION
 
-VERSION="11.1-apache"
-docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 11.1/php8.4/apache-trixie/Dockerfile 11.1/php8.4/apache-trixie/
-docker push neffets/drupal:$VERSION
-
 VERSION="10.5-apache"
 docker build ${BUILD_OPTS} -t neffets/drupal:$VERSION -f 10.5/php8.3/apache-trixie/Dockerfile 10.5/php8.3/apache-trixie/
 docker push neffets/drupal:$VERSION
