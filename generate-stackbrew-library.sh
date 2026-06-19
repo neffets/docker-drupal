@@ -4,7 +4,6 @@ set -Eeuo pipefail
 declare -A aliases=(
 	[11.3]='11 latest'
 	[10.6]='10'
-	[9.5]='9'
 )
 
 defaultDebianSuite='trixie'
@@ -20,10 +19,6 @@ declare -A defaultPhpVersions=(
 	[10.6]='php8.4'
 	[10.5]='php8.4'
 # https://www.drupal.org/docs/system-requirements/php-requirements
-# https://www.drupal.org/docs/7/system-requirements/php-requirements#php_required
-	[7]='php8.3' # PHP 7.4 & 8.0 are EOL, so we don't have a choice but to update the default
-	[9.5]='php8.1'
-	[6]='php7.4'
 )
 
 self="$(basename "$BASH_SOURCE")"

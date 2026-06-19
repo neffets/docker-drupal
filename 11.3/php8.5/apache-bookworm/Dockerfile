@@ -5,7 +5,7 @@
 #
 
 # https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:8.3-fpm-bookworm
+FROM php:8.5-apache-bookworm
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -94,11 +94,18 @@ RUN { \
 		echo 'syslog off'; \
 	} > /etc/msmtprc
 
+# https://www.drupal.org/node/3298550
+# Drupal now recommends sites enable PHP output buffering by default, if PHP is run as a server module
+# e.g. with Apache's mod_php
+RUN { \
+		echo 'output_buffering=true'; \
+	} > /usr/local/etc/php/conf.d/docker-php-drupal-recommended.ini
+
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2026-06-17: https://www.drupal.org/project/drupal/releases/10.6.11
-ENV DRUPAL_VERSION=10.6.11
-ENV DRUPAL_MD5=990b8fca74b4b1657587d13499e5dc7b
+# 2026-06-17: https://www.drupal.org/project/drupal/releases/11.3.12
+ENV DRUPAL_VERSION=11.3.12
+ENV DRUPAL_MD5=2a0e88455cb1f46aaa6b10e027a390c1
 ENV DRUSH_VERSION=13.6.2
 ENV DRUPAL_COMPOSER_MODULES=""
 

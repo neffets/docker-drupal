@@ -154,8 +154,8 @@ for version in "${versions[@]}"; do
 			variants: [
 				"trixie",
 				"bookworm",
+				"alpine3.24",
 				"alpine3.23",
-				"alpine3.22",
 				empty
 				| if startswith("alpine") then empty else
 						"apache-" + .

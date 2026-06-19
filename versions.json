@@ -1,10 +1,10 @@
 {
-  "11.3": {
-    "version": "11.3.9",
-    "url": "https://ftp.drupal.org/files/projects/drupal-11.3.9.tar.gz",
-    "md5": "858a5d745f0b769429fdc83ac68d4fa8",
-    "date": 1778079457,
-    "notes": "https://www.drupal.org/project/drupal/releases/11.3.9",
+  "11.4-rc": {
+    "version": "11.4.0-rc2",
+    "url": "https://ftp.drupal.org/files/projects/drupal-11.4.0-rc2.tar.gz",
+    "md5": "eaa36ed6ae17352856d0885d73d6aadf",
+    "date": 1781721258,
+    "notes": "https://www.drupal.org/project/drupal/releases/11.4.0-rc2",
     "phpVersions": [
       "8.5",
       "8.4"
@@ -14,8 +14,34 @@
       "fpm-trixie",
       "apache-bookworm",
       "fpm-bookworm",
-      "fpm-alpine3.23",
-      "fpm-alpine3.22"
+      "fpm-alpine3.24",
+      "fpm-alpine3.23"
+    ],
+    "composer": {
+      "version": "2"
+    },
+    "drush": {
+      "version": "13.6.2"
+    }
+  },
+  "11.4": null,
+  "11.3": {
+    "version": "11.3.12",
+    "url": "https://ftp.drupal.org/files/projects/drupal-11.3.12.tar.gz",
+    "md5": "2a0e88455cb1f46aaa6b10e027a390c1",
+    "date": 1781715637,
+    "notes": "https://www.drupal.org/project/drupal/releases/11.3.12",
+    "phpVersions": [
+      "8.5",
+      "8.4"
+    ],
+    "variants": [
+      "apache-trixie",
+      "fpm-trixie",
+      "apache-bookworm",
+      "fpm-bookworm",
+      "fpm-alpine3.24",
+      "fpm-alpine3.23"
     ],
     "composer": {
       "version": "2"
@@ -25,11 +51,11 @@
     }
   },
   "11.2": {
-    "version": "11.2.11",
-    "url": "https://ftp.drupal.org/files/projects/drupal-11.2.11.tar.gz",
-    "md5": "9d3ba31874206ba768047ee0ac8aec49",
-    "date": 1776280509,
-    "notes": "https://www.drupal.org/project/drupal/releases/11.2.11",
+    "version": "11.2.14",
+    "url": "https://ftp.drupal.org/files/projects/drupal-11.2.14.tar.gz",
+    "md5": "8c773c77ff6a958fab17323bc514dc68",
+    "date": 1781718479,
+    "notes": "https://www.drupal.org/project/drupal/releases/11.2.14",
     "phpVersions": [
       "8.4",
       "8.3"
@@ -39,8 +65,8 @@
       "fpm-trixie",
       "apache-bookworm",
       "fpm-bookworm",
-      "fpm-alpine3.23",
-      "fpm-alpine3.22"
+      "fpm-alpine3.24",
+      "fpm-alpine3.23"
     ],
     "composer": {
       "version": "2"
@@ -50,11 +76,11 @@
     }
   },
   "10.6": {
-    "version": "10.6.8",
-    "url": "https://ftp.drupal.org/files/projects/drupal-10.6.8.tar.gz",
-    "md5": "3c7903bffdd040ae51edb14c82cd4cf3",
-    "date": 1778083128,
-    "notes": "https://www.drupal.org/project/drupal/releases/10.6.8",
+    "version": "10.6.11",
+    "url": "https://ftp.drupal.org/files/projects/drupal-10.6.11.tar.gz",
+    "md5": "990b8fca74b4b1657587d13499e5dc7b",
+    "date": 1781717051,
+    "notes": "https://www.drupal.org/project/drupal/releases/10.6.11",
     "phpVersions": [
       "8.4",
       "8.3"
@@ -64,8 +90,8 @@
       "fpm-trixie",
       "apache-bookworm",
       "fpm-bookworm",
-      "fpm-alpine3.23",
-      "fpm-alpine3.22"
+      "fpm-alpine3.24",
+      "fpm-alpine3.23"
     ],
     "composer": {
       "version": "2"
@@ -75,11 +101,11 @@
     }
   },
   "10.5": {
-    "version": "10.5.9",
-    "url": "https://ftp.drupal.org/files/projects/drupal-10.5.9.tar.gz",
-    "md5": "e31eceb519a20413b3776a878d9728a6",
-    "date": 1776279123,
-    "notes": "https://www.drupal.org/project/drupal/releases/10.5.9",
+    "version": "10.5.12",
+    "url": "https://ftp.drupal.org/files/projects/drupal-10.5.12.tar.gz",
+    "md5": "9a05679a476d0b33bcf9568d6d1141cb",
+    "date": 1781719851,
+    "notes": "https://www.drupal.org/project/drupal/releases/10.5.12",
     "phpVersions": [
       "8.4",
       "8.3"
@@ -89,8 +115,8 @@
       "fpm-trixie",
       "apache-bookworm",
       "fpm-bookworm",
-      "fpm-alpine3.23",
-      "fpm-alpine3.22"
+      "fpm-alpine3.24",
+      "fpm-alpine3.23"
     ],
     "composer": {
       "version": "2"

@@ -19,6 +19,7 @@ RUN set -eux; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
+		libavif-dev \
 		libfreetype6-dev \
 		libjpeg-dev \
 		libpng-dev \
@@ -33,6 +34,7 @@ RUN set -eux; \
 	; \
 	\
 	docker-php-ext-configure gd \
+		--with-avif \
 		--with-freetype \
 		--with-jpeg=/usr \
 		--with-webp \
@@ -101,9 +103,9 @@ RUN { \
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2026-04-15: https://www.drupal.org/project/drupal/releases/11.2.11
-ENV DRUPAL_VERSION=11.2.11
-ENV DRUPAL_MD5=9d3ba31874206ba768047ee0ac8aec49
+# 2026-06-17: https://www.drupal.org/project/drupal/releases/11.2.14
+ENV DRUPAL_VERSION=11.2.14
+ENV DRUPAL_MD5=8c773c77ff6a958fab17323bc514dc68
 ENV DRUSH_VERSION=13.6.2
 ENV DRUPAL_COMPOSER_MODULES=""
 

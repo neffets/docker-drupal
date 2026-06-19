@@ -5,38 +5,27 @@
 #
 
 # https://www.drupal.org/docs/system-requirements/php-requirements
-FROM php:8.3-fpm-bookworm
+FROM php:8.5-fpm-alpine3.24
 
 # install the PHP extensions we need
 RUN set -eux; \
 	\
-	if command -v a2enmod; then \
-# https://github.com/drupal/drupal/blob/d91d8d0a6d3ffe5f0b6dde8c2fbe81404843edc5/.htaccess (references both mod_expires and mod_rewrite explicitly)
-		a2enmod expires rewrite; \
-	fi; \
-	\
-	savedAptMark="$(apt-mark showmanual)"; \
-	\
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
+	apk add --no-cache --virtual .build-deps \
+		coreutils \
+		freetype-dev \
 		libavif-dev \
-		libfreetype6-dev \
-		libjpeg-dev \
+		libjpeg-turbo-dev \
 		libpng-dev \
-		libpq-dev \
 		libwebp-dev \
 		libzip-dev \
-# sts for mysql-client
-		default-libmysqlclient-dev \
-		libfontconfig1 \
-		libgmp-dev \
-		libxext6 \
+# postgresql-dev is needed for https://bugs.alpinelinux.org/issues/3642
+		postgresql-dev \
 	; \
 	\
 	docker-php-ext-configure gd \
 		--with-avif \
 		--with-freetype \
-		--with-jpeg=/usr \
+		--with-jpeg=/usr/include \
 		--with-webp \
 	; \
 	\
@@ -51,20 +40,14 @@ RUN set -eux; \
 		opcache \
 	; \
 	\
-# reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
-	apt-mark auto '.*' > /dev/null; \
-	apt-mark manual $savedAptMark; \
-	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
-		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); printf "*%s\n", so }' \
-		| sort -u \
-		| xargs -r dpkg-query -S \
-		| cut -d: -f1 \
-		| sort -u \
-		| xargs -rt apt-mark manual; \
-	\
-	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	apt-get install -y --no-install-recommends curl tidy default-mysql-client vim git msmtp msmtp-mta libfontconfig1 libxext6 wget unzip zip; \
-	rm -rf /var/lib/apt/lists/*
+	runDeps="$( \
+		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
+			| tr ',' '\n' \
+			| sort -u \
+			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+	)"; \
+	apk add --no-network --virtual .drupal-phpexts-rundeps $runDeps; \
+	apk del --no-network .build-deps
 
 # ADD Variables DRUPAL_SUBDIR, APACHE_UID, APACHE_GID
 COPY ./docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
@@ -96,9 +79,9 @@ RUN { \
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2026-06-17: https://www.drupal.org/project/drupal/releases/10.6.11
-ENV DRUPAL_VERSION=10.6.11
-ENV DRUPAL_MD5=990b8fca74b4b1657587d13499e5dc7b
+# 2026-06-17: https://www.drupal.org/project/drupal/releases/11.3.12
+ENV DRUPAL_VERSION=11.3.12
+ENV DRUPAL_MD5=2a0e88455cb1f46aaa6b10e027a390c1
 ENV DRUSH_VERSION=13.6.2
 ENV DRUPAL_COMPOSER_MODULES=""
 
