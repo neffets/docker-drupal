@@ -92,9 +92,9 @@ RUN { \
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
 # 2023-12-06: https://www.drupal.org/project/drupal/releases/10.1.7
-ENV DRUPAL_VERSION 9.5.11
-ENV DRUPAL_MD5 c05d0648cdd2365bec160dc29b689e62
-ENV DRUSH_VERSION 11.4.0
+ENV DRUPAL_VERSION=9.5.11
+ENV DRUPAL_MD5=c05d0648cdd2365bec160dc29b689e62
+ENV DRUSH_VERSION=11.4.0
 
 WORKDIR /opt/drupal
 #CMD ["apache2-foreground"]
