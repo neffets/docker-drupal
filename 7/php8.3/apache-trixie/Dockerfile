@@ -114,6 +114,8 @@ RUN set -eux; \
 	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
 	tar -xz --strip-components=1 -f drupal.tar.gz; \
 	rm drupal.tar.gz; \
+	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
+	composer config --json policy.advisories.ignore '["symfony/yaml", "twig/twig"]' ; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require --update-with-all-dependencies --dev drush/drush 10.6.1; \
 	COMPOSER_MEMORY_LIMIT=-1 composer require michelf/php-markdown; \
 	COMPOSER_MEMORY_LIMIT=-1 composer install; \
