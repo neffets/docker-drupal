@@ -1,6 +1,7 @@
 # docker-drupal
 
-Build docker images for Drupal 6, 7, 10.2, 10.3 and 11.0 with support for drush
+Build docker images for Drupal 6, 7, 10.6, 11.3 and 11.4 with support for drush
+Deprecated: <=10.5, <=11.2
 
 * extra support for drush
 * extra support for older drupal-6 (version 6.38), included d6lts patches
