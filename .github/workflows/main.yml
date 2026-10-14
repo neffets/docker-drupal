@@ -13,10 +13,10 @@ jobs:
         uses: actions/checkout@v4
       -
         name: Set up Docker Buildx
-        uses: crazy-max/ghaction-docker-buildx@v3
+        uses: docker/setup-buildx-action@v4
       -
         name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -38,9 +38,9 @@ jobs:
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --platform linux/arm64/v8,linux/amd64  \
             --output "type=image,push=false" \
-            --tag neffets/drupal:10.5-apache \
+            --tag neffets/drupal:11.4-apache \
             --tag neffets/drupal:latest \
-            --file 10.5/php8.3/apache-trixie/Dockerfile 10.5/php8.3/apache-trixie/
+            --file 11.4/php8.4/apache-trixie/Dockerfile 11.4/php8.4/apache-trixie/
       -
         name: Docker Buildx (push)
         if: success() && github.event_name != 'pull_request'
@@ -49,9 +49,9 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --platform linux/arm64/v8,linux/amd64  \
             --output "type=image,push=true" \
-            --tag neffets/drupal:10.5-apache \
+            --tag neffets/drupal:11.4-apache \
             --tag neffets/drupal:latest \
-            --file 10.5/php8.3/apache-trixie/Dockerfile 10.5/php8.3/apache-trixie/
+            --file 11.4/php8.4/apache-trixie/Dockerfile 11.4/php8.4/apache-trixie/
       -
         name: Inspect image
         if: always() && github.event_name != 'pull_request'
