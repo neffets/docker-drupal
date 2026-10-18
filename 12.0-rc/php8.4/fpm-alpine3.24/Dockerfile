@@ -79,9 +79,9 @@ RUN { \
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2026-09-30: https://www.drupal.org/project/drupal/releases/12.0.0-beta1
-ENV DRUPAL_VERSION=12.0.0-beta1
-ENV DRUPAL_MD5=8ed520c98cda72bba0d916e2655724cf
+# 2026-10-14: https://www.drupal.org/project/drupal/releases/12.0.0-beta2
+ENV DRUPAL_VERSION=12.0.0-beta2
+ENV DRUPAL_MD5=9ccddc10ddc9c4d937a4bb7b1aa2a85d
 ENV DRUSH_VERSION=13.6.2
 ENV DRUPAL_COMPOSER_MODULES=""
 
