@@ -103,9 +103,9 @@ RUN { \
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/
 ENV PATH=/usr/local/bin:${PATH}
-# 2026-11-06: https://www.drupal.org/project/drupal/releases/11.4.12
-ENV DRUPAL_VERSION=11.4.12
-ENV DRUPAL_MD5=d85e7f3ca5ec858f03f4d08c6bde584e
+# 2026-11-18: https://www.drupal.org/project/drupal/releases/11.4.13
+ENV DRUPAL_VERSION=11.4.13
+ENV DRUPAL_MD5=38c2e36374e9b10b7cc80bde88a036e6
 ENV DRUSH_VERSION=13.6.2
 ENV DRUPAL_COMPOSER_MODULES=""
 
